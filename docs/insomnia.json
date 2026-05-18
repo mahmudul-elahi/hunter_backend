@@ -652,6 +652,24 @@
                                       ]
                       },
                       {
+                          "_id":  "req_a_predictions_overview",
+                          "_type":  "request",
+                          "parentId":  "fld_admin_predictions",
+                          "name":  "Predictions Overview",
+                          "method":  "GET",
+                          "url":  "{{ _.baseUrl }}/admin/predictions/overview",
+                          "headers":  [
+                                          {
+                                              "name":  "Accept",
+                                              "value":  "application/json"
+                                          },
+                                          {
+                                              "name":  "Authorization",
+                                              "value":  "Bearer {{ _.token }}"
+                                          }
+                                      ]
+                      },
+                      {
                           "_id":  "req_a_list_predictions",
                           "_type":  "request",
                           "parentId":  "fld_admin_predictions",
@@ -782,6 +800,24 @@
                                        "mimeType":  "application/json",
                                        "text":  "{\n  \"status\": \"win\"\n}"
                                    }
+                      },
+                      {
+                          "_id":  "req_a_subscriptions_overview",
+                          "_type":  "request",
+                          "parentId":  "fld_admin_plans",
+                          "name":  "Subscriptions Overview",
+                          "method":  "GET",
+                          "url":  "{{ _.baseUrl }}/admin/subscriptions/overview",
+                          "headers":  [
+                                          {
+                                              "name":  "Accept",
+                                              "value":  "application/json"
+                                          },
+                                          {
+                                              "name":  "Authorization",
+                                              "value":  "Bearer {{ _.token }}"
+                                          }
+                                      ]
                       },
                       {
                           "_id":  "req_a_list_plans",
@@ -966,6 +1002,24 @@
                           "name":  "Toggle Status",
                           "method":  "PATCH",
                           "url":  "{{ _.baseUrl }}/admin/promo-codes/1/toggle",
+                          "headers":  [
+                                          {
+                                              "name":  "Accept",
+                                              "value":  "application/json"
+                                          },
+                                          {
+                                              "name":  "Authorization",
+                                              "value":  "Bearer {{ _.token }}"
+                                          }
+                                      ]
+                      },
+                      {
+                          "_id":  "req_a_users_overview",
+                          "_type":  "request",
+                          "parentId":  "fld_admin_users",
+                          "name":  "Users Overview",
+                          "method":  "GET",
+                          "url":  "{{ _.baseUrl }}/admin/users/overview",
                           "headers":  [
                                           {
                                               "name":  "Accept",
