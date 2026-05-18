@@ -18,6 +18,20 @@ class AdminPredictionController extends Controller
 {
     public function __construct(private readonly WinRateService $winRateService) {}
 
+    public function overview(): JsonResponse
+    {
+        $totalWins = Prediction::where('status', 'win')->count();
+        $resolved = Prediction::whereIn('status', ['win', 'loss'])->count();
+        $overallWinRate = $resolved > 0 ? round(($totalWins / $resolved) * 100, 2) : 0;
+
+        return $this->successResponse('Prediction overview retrieved.', [
+            'total_records' => Prediction::count(),
+            'active_predictions' => Prediction::where('status', 'active')->count(),
+            'total_win' => $totalWins,
+            'overall_win_rate' => $overallWinRate,
+        ]);
+    }
+
     public function index(): JsonResponse
     {
         $paginator = Prediction::with(['category', 'creator'])->latest()->paginate(15);
