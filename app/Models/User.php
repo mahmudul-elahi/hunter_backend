@@ -32,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
         'gender',
         'is_premium',
         'onboarding_completed',
+        'promo_code',
         'email_verified_at',
     ];
 

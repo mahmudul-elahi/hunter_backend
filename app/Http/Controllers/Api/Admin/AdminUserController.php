@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AdminUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\PromoCode;
 use App\Models\User;
@@ -13,7 +14,7 @@ class AdminUserController extends Controller
 {
     public function overview(): JsonResponse
     {
-        $baseQuery = fn() => User::whereHas('roles', fn($q) => $q->where('name', 'user'));
+        $baseQuery = fn () => User::whereHas('roles', fn ($q) => $q->where('name', 'user'));
 
         $totalUsers = $baseQuery()->count();
         $activeUsers = $baseQuery()->whereNull('deleted_at')->count();
@@ -30,16 +31,17 @@ class AdminUserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $users = User::whereHas('roles', fn($q) => $q->where('name', 'user'))
-            ->when($request->query('is_premium'), fn($q, $v) => $q->where('is_premium', filter_var($v, FILTER_VALIDATE_BOOLEAN)))
-            ->when($request->query('search'), fn($q, $s) => $q->where(function ($q) use ($s) {
+        $users = User::whereHas('roles', fn ($q) => $q->where('name', 'user'))
+            ->with('subscriptions')
+            ->when($request->query('is_premium'), fn ($q, $v) => $q->where('is_premium', filter_var($v, FILTER_VALIDATE_BOOLEAN)))
+            ->when($request->query('search'), fn ($q, $s) => $q->where(function ($q) use ($s) {
                 $q->where('first_name', 'like', "%$s%")
                     ->orWhere('last_name', 'like', "%$s%")
                     ->orWhere('email', 'like', "%$s%");
             }))
             ->paginate(15);
 
-        return $this->paginatedResponse('Users retrieved.', UserResource::collection($users), $users);
+        return $this->paginatedResponse('Users retrieved.', AdminUserResource::collection($users), $users);
     }
 
     public function show(int $id): JsonResponse

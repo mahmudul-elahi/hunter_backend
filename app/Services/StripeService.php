@@ -35,7 +35,7 @@ class StripeService
                 ->withCoupon($promoCode->code)
                 ->create($paymentMethodId);
 
-            $user->update(['is_premium' => true]);
+            $user->update(['is_premium' => true, 'promo_code' => $promoCode->code]);
 
             $promoCode->increment('used_count');
 
