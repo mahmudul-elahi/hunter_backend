@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Http\Controllers\Api\User;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\PredictionResource;
+use App\Models\Category;
+use App\Models\Prediction;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class UserPredictionController extends Controller
+{
+    public function index(Request $request): JsonResponse
+    {
+        if (! auth()->user()->is_premium) {
+            return $this->premiumRequired();
+        }
+
+        $paginator = Prediction::with(['category'])
+            ->where('status', 'active')
+            ->when($request->query('category_id'), fn($q, $id) => $q->where('category_id', (int) $id))
+            ->latest()
+            ->paginate(15);
+
+        return $this->paginatedResponse('Predictions retrieved.', PredictionResource::collection($paginator), $paginator);
+    }
+
+    public function show(int $id): JsonResponse
+    {
+        if (! auth()->user()->is_premium) {
+            return $this->premiumRequired();
+        }
+
+        $prediction = Prediction::with(['category'])->findOrFail($id);
+
+        return $this->successResponse('Prediction retrieved.', new PredictionResource($prediction));
+    }
+
+    private function premiumRequired(): JsonResponse
+    {
+        return response()->json([
+            'status' => false,
+            'message' => 'This feature is available for premium subscribers only.',
+            'data' => [
+                'premium_required' => true,
+            ],
+        ], 403);
+    }
+
+    public function categories(): JsonResponse
+    {
+        $categories = Category::where('is_active', true)->get();
+
+        return $this->successResponse('Categories retrieved.', CategoryResource::collection($categories));
+    }
+}
