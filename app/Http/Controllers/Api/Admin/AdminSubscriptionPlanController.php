@@ -7,10 +7,62 @@ use App\Http\Requests\Subscription\StorePlanRequest;
 use App\Http\Requests\Subscription\UpdatePlanRequest;
 use App\Http\Resources\SubscriptionPlanResource;
 use App\Models\SubscriptionPlan;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Laravel\Cashier\Cashier;
 
 class AdminSubscriptionPlanController extends Controller
 {
+    public function overview(): JsonResponse
+    {
+        $totalSubscribers = User::where('is_premium', true)->count();
+
+        $monthlyRevenue = $this->fetchMonthlyRevenueFromStripe();
+
+        $avgRevenuePerUser = $totalSubscribers > 0
+            ? round($monthlyRevenue / $totalSubscribers, 2)
+            : 0;
+
+        $churnedThisMonth = DB::table('subscriptions')
+            ->where('stripe_status', 'canceled')
+            ->whereMonth('updated_at', now()->month)
+            ->whereYear('updated_at', now()->year)
+            ->count();
+
+        $totalAtStartOfMonth = $totalSubscribers + $churnedThisMonth;
+        $churnRate = $totalAtStartOfMonth > 0
+            ? round(($churnedThisMonth / $totalAtStartOfMonth) * 100, 2)
+            : 0;
+
+        return $this->successResponse('Subscription overview retrieved.', [
+            'total_subscribers' => $totalSubscribers,
+            'monthly_revenue' => $monthlyRevenue,
+            'avg_revenue_per_user' => $avgRevenuePerUser,
+            'churn_rate' => $churnRate,
+        ]);
+    }
+
+    private function fetchMonthlyRevenueFromStripe(): float
+    {
+        try {
+            $stripe = Cashier::stripe();
+
+            $invoices = $stripe->invoices->all([
+                'status' => 'paid',
+                'created' => [
+                    'gte' => now()->startOfMonth()->timestamp,
+                    'lte' => now()->endOfMonth()->timestamp,
+                ],
+                'limit' => 100,
+            ]);
+
+            return collect($invoices->data)->sum('amount_paid') / 100;
+        } catch (\Throwable) {
+            return 0.0;
+        }
+    }
+
     public function index(): JsonResponse
     {
         $plans = SubscriptionPlan::paginate(15);
