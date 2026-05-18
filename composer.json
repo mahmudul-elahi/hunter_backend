@@ -13,14 +13,16 @@
         "intervention/image": "^4.1",
         "laravel/cashier": "^16.5",
         "laravel/framework": "^13.8",
+        "laravel/socialite": "^5.27",
         "laravel/tinker": "^3.0",
         "pusher/pusher-php-server": "^7.2",
+        "socialiteproviders/apple": "^5.10",
         "spatie/laravel-permission": "^7.4",
         "tymon/jwt-auth": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/boost": "^2.2",
+        "laravel/boost": "*",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
