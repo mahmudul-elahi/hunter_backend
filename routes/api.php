@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\AdminSettingsController;
 use App\Http\Controllers\Api\Admin\AdminSubscriptionPlanController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Auth\AdminAuthController;
+use App\Http\Controllers\Api\Auth\SocialAuthController;
 use App\Http\Controllers\Api\Auth\UserAuthController;
 use App\Http\Controllers\Api\StripeWebhookController;
 use App\Http\Controllers\Api\User\NotificationController;
@@ -28,6 +29,8 @@ Route::prefix('auth')->group(function () {
     Route::post('forgot-password', [UserAuthController::class, 'forgotPassword']);
     Route::post('verify-otp', [UserAuthController::class, 'verifyOtp']);
     Route::post('reset-password', [UserAuthController::class, 'resetPassword']);
+    Route::post('google', [SocialAuthController::class, 'googleLogin']);
+    Route::post('apple', [SocialAuthController::class, 'appleLogin']);
 });
 
 Route::post('admin/login', [AdminAuthController::class, 'login']);
