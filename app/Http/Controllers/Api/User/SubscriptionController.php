@@ -29,11 +29,11 @@ class SubscriptionController extends Controller
         $subscription = $user->subscription('default');
 
         $type = match (true) {
-            $subscription?->onTrial()                      => 'trial',
-            $subscription?->active() && !$subscription->onTrial() => 'paid',
-            $subscription?->canceled()                     => 'cancelled',
-            $subscription?->ended()                        => 'ended',
-            default                                        => 'none',
+            $subscription?->onTrial() => 'trial',
+            $subscription?->active() && ! $subscription->onTrial() => 'paid',
+            $subscription?->canceled() => 'cancelled',
+            $subscription?->ended() => 'ended',
+            default => 'none',
         };
 
         return $this->successResponse('Subscription retrieved.', [
@@ -76,7 +76,7 @@ class SubscriptionController extends Controller
 
         $promoCode = PromoCode::where('code', $request->code)->first();
 
-        if (! $promoCode->isValid()) {
+        if (! $promoCode || ! $promoCode->isValid()) {
             return $this->errorResponse('This promo code is invalid or has expired.', 422);
         }
 

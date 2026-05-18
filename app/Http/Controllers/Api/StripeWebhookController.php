@@ -9,7 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class StripeWebhookController extends WebhookController
 {
-    public function __construct(private readonly NotificationService $notificationService) {}
+    public function __construct(private readonly NotificationService $notificationService)
+    {
+        parent::__construct();
+    }
 
     public function handleInvoicePaymentSucceeded(array $payload): Response
     {

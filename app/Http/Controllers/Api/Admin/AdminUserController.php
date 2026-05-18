@@ -16,8 +16,8 @@ class AdminUserController extends Controller
     {
         $baseQuery = fn () => User::whereHas('roles', fn ($q) => $q->where('name', 'user'));
 
-        $totalUsers = $baseQuery()->count();
-        $activeUsers = $baseQuery()->whereNull('deleted_at')->count();
+        $totalUsers = $baseQuery()->withTrashed()->count();
+        $activeUsers = $baseQuery()->count();
         $newToday = $baseQuery()->whereDate('created_at', today())->count();
         $promoCodeUsers = PromoCode::sum('used_count');
 

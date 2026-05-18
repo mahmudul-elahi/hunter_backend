@@ -32,7 +32,7 @@ class AdminSettingsController extends Controller
             return $this->errorResponse('Current password is incorrect.', 422);
         }
 
-        $user->update(['password' => Hash::make($request->password)]);
+        $user->update(['password' => $request->password]);
 
         return $this->successResponse('Password changed successfully.');
     }
