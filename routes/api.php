@@ -71,6 +71,7 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::get('dashboard/win-rate-chart', [AdminDashboardController::class, 'winRateChart']);
     Route::get('dashboard/recent-predictions', [AdminDashboardController::class, 'recentPredictions']);
 
+    Route::get('predictions/overview', [AdminPredictionController::class, 'overview']);
     Route::get('predictions', [AdminPredictionController::class, 'index']);
     Route::post('predictions', [AdminPredictionController::class, 'store']);
     Route::get('predictions/{id}', [AdminPredictionController::class, 'show']);
@@ -78,6 +79,7 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::delete('predictions/{id}', [AdminPredictionController::class, 'destroy']);
     Route::patch('predictions/{id}/status', [AdminPredictionController::class, 'updateStatus']);
 
+    Route::get('subscriptions/overview', [AdminSubscriptionPlanController::class, 'overview']);
     Route::get('subscriptions/plans', [AdminSubscriptionPlanController::class, 'index']);
     Route::post('subscriptions/plans', [AdminSubscriptionPlanController::class, 'store']);
     Route::put('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'update']);
@@ -89,6 +91,7 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::delete('promo-codes/{id}', [AdminPromoCodeController::class, 'destroy']);
     Route::patch('promo-codes/{id}/toggle', [AdminPromoCodeController::class, 'toggle']);
 
+    Route::get('users/overview', [AdminUserController::class, 'overview']);
     Route::get('users', [AdminUserController::class, 'index']);
     Route::get('users/{id}', [AdminUserController::class, 'show']);
     Route::patch('users/{id}/status', [AdminUserController::class, 'toggleStatus']);
