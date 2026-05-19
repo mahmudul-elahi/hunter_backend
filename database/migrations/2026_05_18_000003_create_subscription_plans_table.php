@@ -12,14 +12,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('price', 8, 2);
-            $table->enum('billing_period', ['month', 'custom']);
-            $table->integer('billing_every')->nullable();
-            $table->string('billing_duration')->nullable();
+            $table->enum('billing_period', ['monthly', 'yearly', 'half_yearly']);
             $table->text('description')->nullable();
             $table->json('features');
             $table->boolean('is_active')->default(true);
             $table->string('stripe_price_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
