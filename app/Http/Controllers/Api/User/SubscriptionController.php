@@ -10,6 +10,7 @@ use App\Models\PromoCode;
 use App\Models\SubscriptionPlan;
 use App\Services\StripeService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
@@ -64,6 +65,23 @@ class SubscriptionController extends Controller
         }
 
         return $this->successResponse('Trial started successfully.', ['is_premium' => true]);
+    }
+
+    public function validatePromo(Request $request): JsonResponse
+    {
+        $request->validate(['code' => ['required', 'string']]);
+
+        $promoCode = PromoCode::where('code', $request->code)->first();
+
+        if (! $promoCode || ! $promoCode->isValid()) {
+            return $this->errorResponse('This promo code is invalid or has expired.', 422);
+        }
+
+        return $this->successResponse('Promo code is valid.', [
+            'code' => $promoCode->code,
+            'discount' => $promoCode->discount,
+            'type' => $promoCode->type,
+        ]);
     }
 
     public function applyPromo(ApplyPromoRequest $request): JsonResponse
