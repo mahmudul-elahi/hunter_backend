@@ -438,7 +438,24 @@
                                               "name":  "Authorization",
                                               "value":  "Bearer {{ _.token }}"
                                           }
-                                      ]
+                                      ],
+                          "parameters":  [
+                                             {
+                                                 "name":  "category_id",
+                                                 "value":  "",
+                                                 "disabled":  true
+                                             },
+                                             {
+                                                 "name":  "title",
+                                                 "value":  "",
+                                                 "disabled":  true
+                                             },
+                                             {
+                                                 "name":  "per_page",
+                                                 "value":  "15",
+                                                 "disabled":  true
+                                             }
+                                         ]
                       },
                       {
                           "_id":  "req_u_prediction",

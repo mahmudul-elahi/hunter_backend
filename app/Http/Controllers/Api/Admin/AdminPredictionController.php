@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Notifications\PredictionResultNotification;
 use App\Services\WinRateService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminPredictionController extends Controller
@@ -32,9 +33,11 @@ class AdminPredictionController extends Controller
         ]);
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $paginator = Prediction::with(['category', 'creator'])->latest()->paginate(15);
+        $perPage = min($request->integer('per_page', 15), 100);
+
+        $paginator = Prediction::with(['category', 'creator'])->latest()->paginate($perPage);
 
         return $this->paginatedResponse('Predictions retrieved.', PredictionResource::collection($paginator), $paginator);
     }

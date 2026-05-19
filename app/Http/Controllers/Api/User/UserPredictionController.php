@@ -18,11 +18,14 @@ class UserPredictionController extends Controller
             return $this->premiumRequired();
         }
 
+        $perPage = min((int) $request->query('per_page', 15), 100);
+
         $paginator = Prediction::with(['category'])
             ->where('status', 'active')
-            ->when($request->query('category_id'), fn($q, $id) => $q->where('category_id', (int) $id))
+            ->when($request->query('category_id'), fn ($q, $id) => $q->where('category_id', (int) $id))
+            ->when($request->query('title'), fn ($q, $title) => $q->where('title', 'like', "%{$title}%"))
             ->latest()
-            ->paginate(15);
+            ->paginate($perPage);
 
         return $this->paginatedResponse('Predictions retrieved.', PredictionResource::collection($paginator), $paginator);
     }
