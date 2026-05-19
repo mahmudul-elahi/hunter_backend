@@ -38,6 +38,7 @@ class AdminUserResource extends JsonResource
             'status' => $status,
             'amount' => $plan ? (float) $plan->price : null,
             'promo_code' => $this->promo_code,
+            'created_at' => $this->created_at?->toIso8601String(),
         ];
     }
 }
