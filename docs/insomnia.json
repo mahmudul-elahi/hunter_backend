@@ -361,6 +361,24 @@
                                    }
                       },
                       {
+                          "_id":  "req_u_validate_promo",
+                          "_type":  "request",
+                          "parentId":  "fld_user_subscriptions",
+                          "name":  "Validate Promo Code",
+                          "method":  "GET",
+                          "url":  "{{ _.baseUrl }}/subscriptions/validate-promo?code=SAVE20",
+                          "headers":  [
+                                          {
+                                              "name":  "Accept",
+                                              "value":  "application/json"
+                                          },
+                                          {
+                                              "name":  "Authorization",
+                                              "value":  "Bearer {{ _.token }}"
+                                          }
+                                      ]
+                      },
+                      {
                           "_id":  "req_u_apply_promo",
                           "_type":  "request",
                           "parentId":  "fld_user_subscriptions",
@@ -860,7 +878,7 @@
                                       ],
                           "body":  {
                                        "mimeType":  "application/json",
-                                       "text":  "{\n  \"name\": \"Premium\",\n  \"price\": 49.99,\n  \"billing_period\": \"month\",\n  \"features\": [\"Daily picks\", \"Win rate access\"],\n  \"stripe_price_id\": \"price_xxx\",\n  \"is_active\": true\n}"
+                                       "text":  "{\n  \"name\": \"VIP Monthly\",\n  \"price\": 9.99,\n  \"billing_period\": \"monthly\",\n  \"features\": [\"Daily picks\", \"Win rate access\"],\n  \"is_active\": true\n}"
                                    }
                       },
                       {
@@ -886,7 +904,7 @@
                                       ],
                           "body":  {
                                        "mimeType":  "application/json",
-                                       "text":  "{\n  \"name\": \"Premium Updated\",\n  \"price\": 59.99,\n  \"billing_period\": \"month\",\n  \"features\": [\"Daily picks\", \"Win rate access\", \"Priority support\"],\n  \"stripe_price_id\": \"price_xxx\",\n  \"is_active\": true\n}"
+                                       "text":  "{\n  \"name\": \"VIP Yearly\",\n  \"price\": 99.99,\n  \"billing_period\": \"yearly\",\n  \"features\": [\"Daily picks\", \"Win rate access\", \"Priority support\"],\n  \"is_active\": true\n}"
                                    }
                       },
                       {
@@ -1458,6 +1476,50 @@
                           "body":  {
                                        "mimeType":  "application/json",
                                        "text":  "{\n  \"email\": \"john@example.com\",\n  \"code\": \"123456\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
+                                   }
+                      },
+                      {
+                          "_id":  "req_u_google_login",
+                          "_type":  "request",
+                          "parentId":  "fld_user_auth",
+                          "name":  "Google Login",
+                          "method":  "POST",
+                          "url":  "{{ _.baseUrl }}/auth/google",
+                          "headers":  [
+                                          {
+                                              "name":  "Accept",
+                                              "value":  "application/json"
+                                          },
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\n  \"access_token\": \"ya29.google-access-token-from-mobile-sdk\"\n}"
+                                   }
+                      },
+                      {
+                          "_id":  "req_u_apple_login",
+                          "_type":  "request",
+                          "parentId":  "fld_user_auth",
+                          "name":  "Apple Login",
+                          "method":  "POST",
+                          "url":  "{{ _.baseUrl }}/auth/apple",
+                          "headers":  [
+                                          {
+                                              "name":  "Accept",
+                                              "value":  "application/json"
+                                          },
+                                          {
+                                              "name":  "Content-Type",
+                                              "value":  "application/json"
+                                          }
+                                      ],
+                          "body":  {
+                                       "mimeType":  "application/json",
+                                       "text":  "{\n  \"identity_token\": \"eyJraWQiOiJhcHBsZS1pZGVudGl0eS10b2tlbi1mcm9tLW1vYmlsZS1zZGtcIn0\"\n}"
                                    }
                       }
                   ]
