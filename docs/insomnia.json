@@ -720,7 +720,24 @@
                                               "name":  "Authorization",
                                               "value":  "Bearer {{ _.token }}"
                                           }
-                                      ]
+                                      ],
+                          "parameters":  [
+                                             {
+                                                 "name":  "search",
+                                                 "value":  "",
+                                                 "disabled":  true
+                                             },
+                                             {
+                                                 "name":  "category",
+                                                 "value":  "",
+                                                 "disabled":  true
+                                             },
+                                             {
+                                                 "name":  "per_page",
+                                                 "value":  "15",
+                                                 "disabled":  true
+                                             }
+                                         ]
                       },
                       {
                           "_id":  "req_a_create_prediction",

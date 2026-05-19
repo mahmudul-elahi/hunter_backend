@@ -22,7 +22,7 @@ class StorePredictionRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'scheduled_at' => ['required', 'date', 'after_or_equal:today'],
             'confidence_level' => ['required', 'integer', 'between:0,100'],
-            'signal' => ['required', 'in:home_win,away_win,draw,over,under'],
+            'signal' => ['required', 'string', 'max:255'],
             'reason' => ['required', 'string'],
             'detailed_summary' => ['nullable', 'string'],
         ];

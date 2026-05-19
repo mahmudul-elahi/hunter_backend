@@ -37,7 +37,11 @@ class AdminPredictionController extends Controller
     {
         $perPage = min($request->integer('per_page', 15), 100);
 
-        $paginator = Prediction::with(['category', 'creator'])->latest()->paginate($perPage);
+        $paginator = Prediction::with(['category', 'creator'])
+            ->when($request->filled('search'), fn ($q) => $q->where('title', 'like', "%{$request->string('search')}%"))
+            ->when($request->filled('category'), fn ($q) => $q->whereHas('category', fn ($q) => $q->where('name', 'like', "%{$request->string('category')}%")))
+            ->latest()
+            ->paginate($perPage);
 
         return $this->paginatedResponse('Predictions retrieved.', PredictionResource::collection($paginator), $paginator);
     }
