@@ -109,7 +109,19 @@ class AdminSubscriptionPlanController extends Controller
     public function update(UpdatePlanRequest $request, int $id): JsonResponse
     {
         $plan = SubscriptionPlan::findOrFail($id);
-        $plan->update($request->validated());
+        $data = $request->validated();
+
+        if (isset($data['name'])) {
+            try {
+                $stripe = Cashier::stripe();
+                $currentPrice = $stripe->prices->retrieve($plan->stripe_price_id);
+                $stripe->products->update($currentPrice->product, ['name' => $data['name']]);
+            } catch (\Exception $e) {
+                return $this->errorResponse('Failed to update plan in Stripe: '.$e->getMessage(), 422);
+            }
+        }
+
+        $plan->update($data);
 
         return $this->successResponse('Plan updated.', new SubscriptionPlanResource($plan));
     }

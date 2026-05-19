@@ -19,8 +19,6 @@ class UpdatePlanRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'price' => ['sometimes', 'numeric', 'min:0'],
-            'billing_period' => ['sometimes', 'in:monthly,yearly,half_yearly'],
             'description' => ['nullable', 'string'],
             'features' => ['sometimes', 'array'],
             'features.*' => ['string'],
