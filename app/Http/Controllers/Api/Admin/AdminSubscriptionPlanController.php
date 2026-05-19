@@ -65,14 +65,43 @@ class AdminSubscriptionPlanController extends Controller
 
     public function index(): JsonResponse
     {
-        $plans = SubscriptionPlan::paginate(15);
+        $plans = SubscriptionPlan::withCount([
+            'activeSubscriptions as active_subscribers',
+        ])->paginate(15);
 
         return $this->paginatedResponse('Plans retrieved.', SubscriptionPlanResource::collection($plans), $plans);
     }
 
     public function store(StorePlanRequest $request): JsonResponse
     {
-        $plan = SubscriptionPlan::create($request->validated());
+        $data = $request->validated();
+
+        try {
+            $stripe = Cashier::stripe();
+
+            $product = $stripe->products->create([
+                'name' => $data['name'],
+            ]);
+
+            $priceParams = [
+                'product' => $product->id,
+                'unit_amount' => (int) ($data['price'] * 100),
+                'currency' => config('cashier.currency', 'usd'),
+                'recurring' => match ($data['billing_period']) {
+                    'yearly' => ['interval' => 'year'],
+                    'half_yearly' => ['interval' => 'month', 'interval_count' => 6],
+                    default => ['interval' => 'month'],
+                },
+            ];
+
+            $price = $stripe->prices->create($priceParams);
+
+            $data['stripe_price_id'] = $price->id;
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to create plan in Stripe: '.$e->getMessage(), 422);
+        }
+
+        $plan = SubscriptionPlan::create($data);
 
         return $this->successResponse('Plan created.', new SubscriptionPlanResource($plan), 201);
     }
@@ -87,7 +116,30 @@ class AdminSubscriptionPlanController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        SubscriptionPlan::findOrFail($id)->delete();
+        $plan = SubscriptionPlan::findOrFail($id);
+
+        $activeSubscribers = DB::table('subscriptions')
+            ->where('stripe_price', $plan->stripe_price_id)
+            ->whereIn('stripe_status', ['active', 'trialing'])
+            ->count();
+
+        if ($activeSubscribers > 0) {
+            $plan->update(['is_active' => false]);
+
+            return $this->successResponse(
+                "Plan has {$activeSubscribers} active subscriber(s) — marked inactive so no new users can subscribe. It will need to be deleted manually once all subscriptions end.",
+                ['is_active' => false, 'active_subscribers' => $activeSubscribers]
+            );
+        }
+
+        try {
+            $price = Cashier::stripe()->prices->retrieve($plan->stripe_price_id);
+            Cashier::stripe()->products->update($price->product, ['active' => false]);
+        } catch (\Exception) {
+            // price may not exist in Stripe — continue
+        }
+
+        $plan->delete();
 
         return $this->successResponse('Plan deleted.');
     }
