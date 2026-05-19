@@ -39,6 +39,9 @@ class AdminUserController extends Controller
                     ->orWhere('last_name', 'like', "%$s%")
                     ->orWhere('email', 'like', "%$s%");
             }))
+            ->when($request->has('used_promo'), fn ($q) => filter_var($request->query('used_promo'), FILTER_VALIDATE_BOOLEAN)
+                ? $q->whereNotNull('promo_code')
+                : $q->whereNull('promo_code'))
             ->paginate(15);
 
         return $this->paginatedResponse('Users retrieved.', AdminUserResource::collection($users), $users);
