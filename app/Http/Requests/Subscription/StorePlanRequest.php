@@ -20,13 +20,10 @@ class StorePlanRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
-            'billing_period' => ['required', 'in:month,custom'],
-            'billing_every' => ['nullable', 'integer', 'min:1'],
-            'billing_duration' => ['nullable', 'string'],
+            'billing_period' => ['required', 'in:monthly,yearly,half_yearly'],
             'description' => ['nullable', 'string'],
             'features' => ['required', 'array'],
             'features.*' => ['string'],
-            'stripe_price_id' => ['required', 'string'],
             'is_active' => ['boolean'],
         ];
     }

@@ -17,12 +17,11 @@ class SubscriptionPlanResource extends JsonResource
             'name' => $this->name,
             'price' => $this->price,
             'billing_period' => $this->billing_period,
-            'billing_every' => $this->billing_every,
-            'billing_duration' => $this->billing_duration,
             'description' => $this->description,
             'features' => $this->features,
             'is_active' => $this->is_active,
             'stripe_price_id' => $this->stripe_price_id,
+            'active_subscribers' => $this->active_subscribers ?? 0,
         ];
     }
 }

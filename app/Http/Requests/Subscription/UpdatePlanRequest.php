@@ -20,13 +20,10 @@ class UpdatePlanRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'price' => ['sometimes', 'numeric', 'min:0'],
-            'billing_period' => ['sometimes', 'in:month,custom'],
-            'billing_every' => ['nullable', 'integer', 'min:1'],
-            'billing_duration' => ['nullable', 'string'],
+            'billing_period' => ['sometimes', 'in:monthly,yearly,half_yearly'],
             'description' => ['nullable', 'string'],
             'features' => ['sometimes', 'array'],
             'features.*' => ['string'],
-            'stripe_price_id' => ['sometimes', 'string'],
             'is_active' => ['boolean'],
         ];
     }
