@@ -13,7 +13,7 @@ class SubscriptionPlanSeeder extends Seeder
             ['name' => 'VIP Members'],
             [
                 'price' => 99.00,
-                'billing_period' => 'month',
+                'billing_period' => 'monthly',
                 'features' => [
                     'Daily picks',
                     'Win rate access',
