@@ -52,6 +52,7 @@ Route::middleware(['auth:api', 'role:user'])->group(function () {
     Route::get('subscriptions/plans', [SubscriptionController::class, 'plans']);
     Route::get('subscriptions/my-subscription', [SubscriptionController::class, 'mySubscription']);
     Route::post('subscriptions/start-trial', [SubscriptionController::class, 'startTrial']);
+    Route::get('subscriptions/validate-promo', [SubscriptionController::class, 'validatePromo']);
     Route::post('subscriptions/apply-promo', [SubscriptionController::class, 'applyPromo']);
     Route::delete('subscriptions/cancel', [SubscriptionController::class, 'cancel']);
 
