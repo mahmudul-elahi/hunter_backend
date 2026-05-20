@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ChangePasswordRequest;
-use App\Http\Requests\Profile\UpdateProfileRequest;
+use App\Http\Requests\Profile\UpdateAdminProfileRequest;
 use App\Http\Resources\AdminResource;
+use App\Models\AdminSetting;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminSettingsController extends Controller
 {
@@ -17,11 +20,22 @@ class AdminSettingsController extends Controller
         return $this->successResponse('Profile retrieved.', new AdminResource(Auth::user()));
     }
 
-    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    public function updateProfile(UpdateAdminProfileRequest $request): JsonResponse
     {
-        Auth::user()->update($request->validated());
+        $user = Auth::user();
+        $data = $request->safe()->except('avatar');
 
-        return $this->successResponse('Profile updated.', new AdminResource(Auth::user()->fresh()));
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        $user->update($data);
+
+        return $this->successResponse('Profile updated.', new AdminResource($user->fresh()));
     }
 
     public function changePassword(ChangePasswordRequest $request): JsonResponse
@@ -39,11 +53,26 @@ class AdminSettingsController extends Controller
 
     public function notificationSettings(): JsonResponse
     {
-        return $this->successResponse('Notification settings retrieved.', []);
+        $settings = AdminSetting::firstOrCreate(
+            [],
+            ['new_subscription' => true, 'payment_failed' => true, 'prediction_result' => true, 'promo_code_used' => true],
+        );
+
+        return $this->successResponse('Notification settings retrieved.', $settings);
     }
 
-    public function updateNotificationSettings(): JsonResponse
+    public function updateNotificationSettings(Request $request): JsonResponse
     {
-        return $this->successResponse('Notification settings updated.');
+        $data = $request->validate([
+            'new_subscription' => ['sometimes', 'boolean'],
+            'payment_failed' => ['sometimes', 'boolean'],
+            'prediction_result' => ['sometimes', 'boolean'],
+            'promo_code_used' => ['sometimes', 'boolean'],
+        ]);
+
+        $settings = AdminSetting::firstOrCreate([]);
+        $settings->update($data);
+
+        return $this->successResponse('Notification settings updated.', $settings->fresh());
     }
 }
