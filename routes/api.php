@@ -104,6 +104,7 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::post('categories', [AdminCategoryController::class, 'store']);
     Route::put('categories/{id}', [AdminCategoryController::class, 'update']);
 
+    Route::get('me', [AdminSettingsController::class, 'profile']);
     Route::get('settings/profile', [AdminSettingsController::class, 'profile']);
     Route::post('settings/profile', [AdminSettingsController::class, 'updateProfile']);
     Route::put('settings/password', [AdminSettingsController::class, 'changePassword']);
