@@ -40,7 +40,7 @@ class StripeService
             $promoCode->increment('used_count');
 
             $this->notificationService->sendTrialStarted($user);
-            $this->notificationService->sendPromoCodeApplied($user, $promoCode);
+            $this->notificationService->sendAdminPromoCodeUsed($user, $promoCode);
 
             return $subscription;
         });

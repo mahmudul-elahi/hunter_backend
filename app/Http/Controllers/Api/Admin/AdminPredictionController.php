@@ -10,6 +10,7 @@ use App\Http\Resources\PredictionResource;
 use App\Models\Prediction;
 use App\Models\User;
 use App\Notifications\PredictionResultNotification;
+use App\Services\NotificationService;
 use App\Services\WinRateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminPredictionController extends Controller
 {
-    public function __construct(private readonly WinRateService $winRateService) {}
+    public function __construct(
+        private readonly WinRateService $winRateService,
+        private readonly NotificationService $notificationService,
+    ) {}
 
     public function overview(): JsonResponse
     {
@@ -100,6 +104,8 @@ class AdminPredictionController extends Controller
             User::where('is_premium', true)->each(
                 fn (User $user) => $user->notify(new PredictionResultNotification($prediction))
             );
+
+            $this->notificationService->sendAdminPredictionResult($prediction);
         }
 
         return $this->successResponse('Prediction status updated.', new PredictionResource($prediction->load(['category'])));
