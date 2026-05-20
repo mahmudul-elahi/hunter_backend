@@ -12,9 +12,14 @@ class SupportController extends Controller
 {
     public function contact(ContactRequest $request): JsonResponse
     {
-        Mail::raw(
-            'From: '.Auth::user()->email."\n\nSubject: {$request->subject}\n\nMessage: {$request->message}",
-            fn ($m) => $m->to(config('mail.from.address'))->subject('Support: '.$request->subject)
+        $user = Auth::user();
+
+        Mail::send(
+            'emails.support-contact',
+            ['user' => $user, 'subject' => $request->subject, 'message' => $request->message],
+            fn ($m) => $m->to(config('mail.from.address'))
+                ->replyTo($user->email)
+                ->subject('Support: '.$request->subject)
         );
 
         return $this->successResponse('Support message sent successfully.');
