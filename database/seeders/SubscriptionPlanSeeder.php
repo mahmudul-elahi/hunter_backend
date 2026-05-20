@@ -14,6 +14,7 @@ class SubscriptionPlanSeeder extends Seeder
             [
                 'price' => 99.00,
                 'billing_period' => 'monthly',
+                'stripe_price_id' => 'price_1TYUopAPfxXYCOyvJKaGkxND',
                 'features' => [
                     'Daily picks',
                     'Win rate access',
