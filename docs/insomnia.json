@@ -1235,7 +1235,7 @@
                           "_type":  "request",
                           "parentId":  "fld_admin_settings",
                           "name":  "Update Profile",
-                          "method":  "PUT",
+                          "method":  "POST",
                           "url":  "{{ _.baseUrl }}/admin/settings/profile",
                           "headers":  [
                                           {
