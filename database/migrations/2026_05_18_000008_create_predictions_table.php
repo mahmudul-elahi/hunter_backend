@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('title');
             $table->dateTime('scheduled_at');
             $table->integer('confidence_level');
-            $table->enum('signal', ['home_win', 'away_win', 'draw', 'over', 'under']);
+            $table->string('signal');
             $table->text('reason');
             $table->longText('detailed_summary')->nullable();
             $table->enum('status', ['active', 'win', 'loss', 'cancelled'])->default('active');

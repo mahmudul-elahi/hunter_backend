@@ -13,14 +13,17 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
+            $table->string('google_id')->nullable()->unique();
+            $table->string('apple_id')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('avatar')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('location')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->boolean('is_premium')->default(false);
             $table->boolean('onboarding_completed')->default(false);
+            $table->string('promo_code')->nullable();
             $table->string('stripe_id')->nullable()->index();
             $table->string('pm_type')->nullable();
             $table->string('pm_last_four', 4)->nullable();

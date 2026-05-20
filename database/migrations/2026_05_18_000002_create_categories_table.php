@@ -14,6 +14,7 @@ return new class extends Migration
             $table->decimal('win_rate', 5, 2)->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
