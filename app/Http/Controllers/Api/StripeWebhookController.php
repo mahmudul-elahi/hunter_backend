@@ -21,6 +21,7 @@ class StripeWebhookController extends WebhookController
         if ($user) {
             $user->update(['is_premium' => true]);
             $this->notificationService->sendPaymentSucceeded($user);
+            $this->notificationService->sendAdminNewSubscription($user);
         }
 
         return $this->successMethod();

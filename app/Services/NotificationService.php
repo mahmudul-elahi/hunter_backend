@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PromoCode;
 use App\Models\User;
+use App\Notifications\AdminNewSubscriptionNotification;
 use App\Notifications\PaymentFailedNotification;
 use App\Notifications\PaymentSucceededNotification;
 use App\Notifications\PromoCodeAppliedNotification;
@@ -30,6 +31,11 @@ class NotificationService
     public function sendSubscriptionCancelled(User $user): void
     {
         $user->notify(new SubscriptionCancelledNotification);
+    }
+
+    public function sendAdminNewSubscription(User $subscriber): void
+    {
+        User::role('admin')->each(fn (User $admin) => $admin->notify(new AdminNewSubscriptionNotification($subscriber)));
     }
 
     public function sendPromoCodeApplied(User $user, PromoCode $promoCode): void
