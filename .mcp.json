@@ -6,6 +6,16 @@
                 "artisan",
                 "boost:mcp"
             ]
+        },
+        "hostinger-mcp": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "hostinger-api-mcp@latest"
+            ],
+            "env": {
+                "API_TOKEN": "1SUPptKouSQHIdG0qWUeNWLgLKH4sBPRrix14Lnl5a0107a8"
+            }
         }
     }
 }
