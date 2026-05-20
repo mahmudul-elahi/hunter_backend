@@ -63,17 +63,6 @@ class StripeWebhookController extends WebhookController
         return parent::handleCustomerSubscriptionUpdated($payload);
     }
 
-    public function handleCustomerSubscriptionTrialWillEnd(array $payload): Response
-    {
-        $user = $this->getUserByStripeId($payload['data']['object']['customer'] ?? null);
-
-        if ($user) {
-            $this->notificationService->sendTrialEndingReminder($user);
-        }
-
-        return $this->successMethod();
-    }
-
     protected function getUserByStripeId($stripeId)
     {
         if (! $stripeId) {

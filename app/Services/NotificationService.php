@@ -8,7 +8,6 @@ use App\Notifications\PaymentFailedNotification;
 use App\Notifications\PaymentSucceededNotification;
 use App\Notifications\PromoCodeAppliedNotification;
 use App\Notifications\SubscriptionCancelledNotification;
-use App\Notifications\TrialEndingReminderNotification;
 use App\Notifications\TrialStartedNotification;
 
 class NotificationService
@@ -31,11 +30,6 @@ class NotificationService
     public function sendSubscriptionCancelled(User $user): void
     {
         $user->notify(new SubscriptionCancelledNotification);
-    }
-
-    public function sendTrialEndingReminder(User $user): void
-    {
-        $user->notify(new TrialEndingReminderNotification);
     }
 
     public function sendPromoCodeApplied(User $user, PromoCode $promoCode): void
