@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\StoreCategoryRequest;
-use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
@@ -25,11 +24,11 @@ class AdminCategoryController extends Controller
         return $this->successResponse('Category created.', new CategoryResource($category), 201);
     }
 
-    public function update(UpdateCategoryRequest $request, int $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $category = Category::findOrFail($id);
-        $category->update($request->validated());
+        $category->delete();
 
-        return $this->successResponse('Category updated.', new CategoryResource($category));
+        return $this->successResponse('Category deleted.');
     }
 }
