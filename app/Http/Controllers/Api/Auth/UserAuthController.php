@@ -11,6 +11,7 @@ use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\VerifyEmailOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Models\User;
+use App\Services\NotificationService;
 use App\Services\OtpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserAuthController extends Controller
 {
-    public function __construct(private readonly OtpService $otpService) {}
+    public function __construct(
+        private readonly OtpService $otpService,
+        private readonly NotificationService $notificationService,
+    ) {}
 
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -108,7 +112,10 @@ class UserAuthController extends Controller
             return $this->errorResponse('Invalid or expired OTP.', 422);
         }
 
-        User::where('email', $request->email)->update(['email_verified_at' => now()]);
+        $user = User::where('email', $request->email)->first();
+        $user->update(['email_verified_at' => now()]);
+
+        $this->notificationService->sendWelcome($user);
 
         return $this->successResponse('Email verified successfully.');
     }
@@ -150,9 +157,10 @@ class UserAuthController extends Controller
             return $this->errorResponse('Invalid or expired OTP.', 422);
         }
 
-        User::where('email', $request->email)->update([
-            'password' => Hash::make($request->password),
-        ]);
+        $user = User::where('email', $request->email)->first();
+        $user->update(['password' => Hash::make($request->password)]);
+
+        $this->notificationService->sendPasswordChanged($user);
 
         return $this->successResponse('Password reset successfully.');
     }
@@ -166,6 +174,8 @@ class UserAuthController extends Controller
         }
 
         $user->update(['password' => $request->password]);
+
+        $this->notificationService->sendPasswordChanged($user);
 
         return $this->successResponse('Password changed successfully.');
     }

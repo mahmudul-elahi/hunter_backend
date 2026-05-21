@@ -57,6 +57,8 @@ class AdminPredictionController extends Controller
 
         $prediction->load(['category']);
 
+        $this->notificationService->sendNewPrediction($prediction);
+
         return $this->successResponse('Prediction created.', new PredictionResource($prediction), 201);
     }
 

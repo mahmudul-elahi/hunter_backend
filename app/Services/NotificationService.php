@@ -10,13 +10,40 @@ use App\Notifications\AdminNewSubscriptionNotification;
 use App\Notifications\AdminPaymentFailedNotification;
 use App\Notifications\AdminPredictionResultNotification;
 use App\Notifications\AdminPromoCodeUsedNotification;
+use App\Notifications\NewPredictionNotification;
+use App\Notifications\PasswordChangedNotification;
 use App\Notifications\PaymentFailedNotification;
 use App\Notifications\PaymentSucceededNotification;
 use App\Notifications\SubscriptionCancelledNotification;
+use App\Notifications\SubscriptionRenewalReminderNotification;
 use App\Notifications\TrialStartedNotification;
+use App\Notifications\WelcomeNotification;
+use Carbon\Carbon;
 
 class NotificationService
 {
+    public function sendWelcome(User $user): void
+    {
+        $user->notify(new WelcomeNotification);
+    }
+
+    public function sendPasswordChanged(User $user): void
+    {
+        $user->notify(new PasswordChangedNotification);
+    }
+
+    public function sendNewPrediction(Prediction $prediction): void
+    {
+        User::where('is_premium', true)->each(
+            fn (User $user) => $user->notify(new NewPredictionNotification($prediction))
+        );
+    }
+
+    public function sendSubscriptionRenewalReminder(User $user, Carbon $renewalDate): void
+    {
+        $user->notify(new SubscriptionRenewalReminderNotification($renewalDate));
+    }
+
     public function sendTrialStarted(User $user): void
     {
         $user->notify(new TrialStartedNotification);

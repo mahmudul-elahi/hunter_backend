@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Services\NotificationService;
+use Carbon\Carbon;
 use Laravel\Cashier\Http\Controllers\WebhookController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,6 +51,19 @@ class StripeWebhookController extends WebhookController
         }
 
         return parent::handleCustomerSubscriptionDeleted($payload);
+    }
+
+    public function handleInvoiceUpcoming(array $payload): Response
+    {
+        $user = $this->getUserByStripeId($payload['data']['object']['customer'] ?? null);
+
+        if ($user) {
+            $periodEnd = $payload['data']['object']['period_end'] ?? null;
+            $renewalDate = $periodEnd ? Carbon::createFromTimestamp($periodEnd) : now()->addDays(3);
+            $this->notificationService->sendSubscriptionRenewalReminder($user, $renewalDate);
+        }
+
+        return $this->successMethod();
     }
 
     public function handleCustomerSubscriptionUpdated(array $payload): Response
