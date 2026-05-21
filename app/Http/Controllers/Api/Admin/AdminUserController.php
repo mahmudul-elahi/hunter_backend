@@ -31,6 +31,8 @@ class AdminUserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $perPage = min($request->integer('per_page', 15), 100);
+
         $users = User::whereHas('roles', fn ($q) => $q->where('name', 'user'))
             ->with('subscriptions')
             ->when($request->query('is_premium'), fn ($q, $v) => $q->where('is_premium', filter_var($v, FILTER_VALIDATE_BOOLEAN)))
@@ -42,7 +44,7 @@ class AdminUserController extends Controller
             ->when($request->has('used_promo'), fn ($q) => filter_var($request->query('used_promo'), FILTER_VALIDATE_BOOLEAN)
                 ? $q->whereNotNull('promo_code')
                 : $q->whereNull('promo_code'))
-            ->paginate(15);
+            ->paginate($perPage);
 
         return $this->paginatedResponse('Users retrieved.', AdminUserResource::collection($users), $users);
     }
