@@ -21,6 +21,7 @@ class UserPredictionController extends Controller
         $perPage = min((int) $request->query('per_page', 15), 100);
 
         $paginator = Prediction::with(['category'])
+            ->whereHas('category')
             ->where('status', 'active')
             ->when($request->query('category_id'), fn ($q, $id) => $q->where('category_id', (int) $id))
             ->when($request->query('title'), fn ($q, $title) => $q->where('title', 'like', "%{$title}%"))
