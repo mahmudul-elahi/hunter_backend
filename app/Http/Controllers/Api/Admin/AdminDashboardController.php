@@ -60,6 +60,7 @@ class AdminDashboardController extends Controller
     public function recentPredictions(): JsonResponse
     {
         $predictions = Prediction::with(['category'])
+            ->whereHas('category')
             ->latest()
             ->limit(10)
             ->get();
