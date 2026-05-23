@@ -42,6 +42,7 @@ class AdminPredictionController extends Controller
         $perPage = min($request->integer('per_page', 15), 100);
 
         $paginator = Prediction::with(['category', 'creator'])
+            ->whereHas('category')
             ->when($request->filled('search'), fn ($q) => $q->where('title', 'like', "%{$request->string('search')}%"))
             ->when($request->filled('category'), fn ($q) => $q->whereHas('category', fn ($q) => $q->where('name', 'like', "%{$request->string('category')}%")))
             ->when($request->query('status'), fn ($q, $status) => $q->where('status', $status))
