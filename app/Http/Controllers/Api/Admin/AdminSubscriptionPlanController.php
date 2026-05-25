@@ -126,6 +126,16 @@ class AdminSubscriptionPlanController extends Controller
         return $this->successResponse('Plan updated.', new SubscriptionPlanResource($plan));
     }
 
+    public function toggleStatus(int $id): JsonResponse
+    {
+        $plan = SubscriptionPlan::findOrFail($id);
+        $plan->update(['is_active' => ! $plan->is_active]);
+
+        $status = $plan->is_active ? 'activated' : 'deactivated';
+
+        return $this->successResponse("Plan {$status}.", new SubscriptionPlanResource($plan));
+    }
+
     public function destroy(int $id): JsonResponse
     {
         $plan = SubscriptionPlan::findOrFail($id);
