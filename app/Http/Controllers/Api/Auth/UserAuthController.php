@@ -112,7 +112,7 @@ class UserAuthController extends Controller
             return $this->errorResponse('Invalid or expired OTP.', 422);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->firstOrFail();
         $user->update(['email_verified_at' => now()]);
 
         $this->notificationService->sendWelcome($user);
@@ -157,7 +157,7 @@ class UserAuthController extends Controller
             return $this->errorResponse('Invalid or expired OTP.', 422);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->firstOrFail();
         $user->update(['password' => Hash::make($request->password)]);
 
         $this->notificationService->sendPasswordChanged($user);
