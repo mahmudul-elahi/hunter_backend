@@ -56,7 +56,7 @@ class SubscriptionController extends Controller
             return $this->errorResponse('You already have an active subscription.', 422);
         }
 
-        $plan = SubscriptionPlan::findOrFail($request->plan_id);
+        $plan = SubscriptionPlan::where('is_active', true)->findOrFail($request->plan_id);
 
         try {
             $this->stripeService->startTrial($user, $plan, $request->payment_method_id);
@@ -98,7 +98,7 @@ class SubscriptionController extends Controller
             return $this->errorResponse('This promo code is invalid or has expired.', 422);
         }
 
-        $plan = SubscriptionPlan::findOrFail($request->plan_id);
+        $plan = SubscriptionPlan::where('is_active', true)->findOrFail($request->plan_id);
 
         try {
             $this->stripeService->startTrialWithPromo($user, $plan, $request->payment_method_id, $promoCode);
