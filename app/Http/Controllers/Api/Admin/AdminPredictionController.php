@@ -65,7 +65,7 @@ class AdminPredictionController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $prediction = Prediction::with(['category'])->findOrFail($id);
+        $prediction = Prediction::with(['category'])->whereHas('category')->findOrFail($id);
 
         return $this->successResponse('Prediction retrieved.', new PredictionResource($prediction));
     }
