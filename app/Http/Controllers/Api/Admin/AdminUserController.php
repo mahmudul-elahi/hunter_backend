@@ -58,9 +58,9 @@ class AdminUserController extends Controller
 
     public function toggleStatus(int $id): JsonResponse
     {
-        $user = User::findOrFail($id);
+        $user = User::withTrashed()->findOrFail($id);
 
-        if ($user->deleted_at) {
+        if ($user->trashed()) {
             $user->restore();
             $message = 'User activated.';
         } else {
