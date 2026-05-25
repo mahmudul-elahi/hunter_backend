@@ -37,7 +37,7 @@ class UserPredictionController extends Controller
             return $this->premiumRequired();
         }
 
-        $prediction = Prediction::with(['category'])->findOrFail($id);
+        $prediction = Prediction::with(['category'])->whereHas('category')->findOrFail($id);
 
         return $this->successResponse('Prediction retrieved.', new PredictionResource($prediction));
     }
