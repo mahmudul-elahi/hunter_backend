@@ -88,6 +88,7 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::post('subscriptions/plans', [AdminSubscriptionPlanController::class, 'store']);
     Route::put('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'update']);
     Route::delete('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'destroy']);
+    Route::patch('subscriptions/plans/{id}/toggle-status', [AdminSubscriptionPlanController::class, 'toggleStatus']);
 
     Route::get('promo-codes', [AdminPromoCodeController::class, 'index']);
     Route::post('promo-codes', [AdminPromoCodeController::class, 'store']);
