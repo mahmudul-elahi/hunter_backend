@@ -16,8 +16,8 @@ class AdminUserController extends Controller
     {
         $baseQuery = fn () => User::whereHas('roles', fn ($q) => $q->where('name', 'user'));
 
-        $totalUsers = $baseQuery()->withTrashed()->count();
-        $activeUsers = $baseQuery()->count();
+        $totalUsers = $baseQuery()->count();
+        $activeUsers = $baseQuery()->where('is_active', true)->count();
         $newToday = $baseQuery()->whereDate('created_at', today())->count();
         $promoCodeUsers = PromoCode::sum('used_count');
 
@@ -58,19 +58,16 @@ class AdminUserController extends Controller
 
     public function toggleStatus(int $id): JsonResponse
     {
-        $user = User::withTrashed()->findOrFail($id);
+        $user = User::findOrFail($id);
 
         if ($user->hasRole('admin')) {
             return $this->errorResponse('Cannot change status of admin users.', 403);
         }
 
-        if ($user->trashed()) {
-            $user->restore();
-            $message = 'User activated.';
-        } else {
-            $user->delete();
-            $message = 'User deactivated.';
-        }
+        $user->is_active = ! $user->is_active;
+        $user->save();
+
+        $message = $user->is_active ? 'User activated.' : 'User deactivated.';
 
         return $this->successResponse($message);
     }

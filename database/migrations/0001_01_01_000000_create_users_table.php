@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->boolean('is_premium')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->boolean('onboarding_completed')->default(false);
             $table->string('promo_code')->nullable();
             $table->string('stripe_id')->nullable()->index();
@@ -30,7 +31,6 @@ return new class extends Migration
             $table->timestamp('trial_ends_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

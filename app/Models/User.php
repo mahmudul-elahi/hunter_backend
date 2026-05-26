@@ -6,7 +6,6 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
@@ -16,7 +15,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
-    use Billable, HasFactory, HasRoles, Notifiable, SoftDeletes;
+    use Billable, HasFactory, HasRoles, Notifiable;
 
     /**
      * @var array<int, string>
@@ -33,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
         'location',
         'gender',
         'is_premium',
+        'is_active',
         'onboarding_completed',
         'promo_code',
         'email_verified_at',
@@ -56,6 +56,7 @@ class User extends Authenticatable implements JWTSubject
             'date_of_birth' => 'date',
             'password' => 'hashed',
             'is_premium' => 'boolean',
+            'is_active' => 'boolean',
             'onboarding_completed' => 'boolean',
         ];
     }

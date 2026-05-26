@@ -19,6 +19,12 @@ class AdminAuthController extends Controller
 
         $user = Auth::user();
 
+        if (! $user->is_active) {
+            Auth::logout();
+
+            return $this->errorResponse('Account is deactivated.', 403);
+        }
+
         if (! $user->hasRole('admin')) {
             Auth::logout();
 

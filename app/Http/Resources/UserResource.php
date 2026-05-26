@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'gender' => $this->gender,
             'is_premium' => $this->is_premium,
             'onboarding_completed' => $this->onboarding_completed,
+            'is_active' => $this->is_active,
             'subscription' => $this->resolveSubscription(),
             'created_at' => $this->created_at?->toIso8601String(),
         ];

@@ -63,6 +63,10 @@ class SocialAuthController extends Controller
             return $newUser;
         });
 
+        if (! $user->is_active) {
+            return $this->errorResponse('Account is deactivated.', 403);
+        }
+
         $jwtToken = auth('api')->login($user);
 
         return $this->successResponse('Login successful.', [

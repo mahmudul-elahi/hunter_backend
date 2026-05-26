@@ -20,6 +20,7 @@ class AdminUserResource extends JsonResource
             : null;
 
         $status = match (true) {
+            ! $this->is_active => 'inactive',
             $subscription?->trial_ends_at && $subscription->trial_ends_at->isFuture() => 'trial',
             $subscription?->stripe_status === 'active' => 'active',
             $subscription?->ends_at && $subscription->ends_at->isPast() => 'expired',
