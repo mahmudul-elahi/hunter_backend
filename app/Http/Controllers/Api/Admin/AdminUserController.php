@@ -60,6 +60,10 @@ class AdminUserController extends Controller
     {
         $user = User::withTrashed()->findOrFail($id);
 
+        if ($user->hasRole('admin')) {
+            return $this->errorResponse('Cannot change status of admin users.', 403);
+        }
+
         if ($user->trashed()) {
             $user->restore();
             $message = 'User activated.';
