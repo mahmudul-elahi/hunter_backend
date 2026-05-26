@@ -22,10 +22,10 @@ class AdminUserResource extends JsonResource
         $status = $this->is_active ? 'active' : 'deactive';
         $planStatus = match (true) {
             ! $this->is_active => 'deactive',
+            $subscription === null => 'none',
             $subscription?->trial_ends_at && $subscription->trial_ends_at->isFuture() => 'running',
             $subscription?->stripe_status === 'active' => 'running',
             $subscription?->ends_at && $subscription->ends_at->isPast() => 'expired',
-            $subscription !== null => 'expired',
             default => 'expired',
         };
 
