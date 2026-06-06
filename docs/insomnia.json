@@ -298,8 +298,7 @@
             "parameters": [
                 {
                     "name": "category_id",
-                    "value": "",
-                    "disabled": true
+                    "value": "1"
                 },
                 {
                     "name": "title",
