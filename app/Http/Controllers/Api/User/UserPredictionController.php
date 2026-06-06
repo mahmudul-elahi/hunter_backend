@@ -12,18 +12,18 @@ use Illuminate\Http\Request;
 
 class UserPredictionController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, int $categoryId): JsonResponse
     {
         if (! auth()->user()->is_premium) {
             return $this->premiumRequired();
         }
 
-        $perPage = min((int) $request->query('per_page', 15), 100);
+        $perPage = min($request->integer('per_page', 15), 100);
 
         $paginator = Prediction::with(['category'])
             ->whereHas('category')
             ->where('status', 'active')
-            ->when($request->query('category_id'), fn ($q, $id) => $q->where('category_id', (int) $id))
+            ->where('category_id', $categoryId)
             ->when($request->query('title'), fn ($q, $title) => $q->where('title', 'like', "%{$title}%"))
             ->latest()
             ->paginate($perPage);

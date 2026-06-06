@@ -104,7 +104,7 @@ class AdminPredictionController extends Controller
         if (in_array($prediction->status, ['win', 'loss'])) {
             $this->winRateService->recalculate($prediction->category_id);
 
-            User::where('is_premium', true)->each(
+            User::where('is_premium', true)->lazy()->each(
                 fn (User $user) => $user->notify(new PredictionResultNotification($prediction))
             );
 

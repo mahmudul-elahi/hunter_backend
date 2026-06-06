@@ -3,23 +3,20 @@
 use App\Http\Controllers\Api\Admin\AdminCategoryController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AdminPredictionController;
-use App\Http\Controllers\Api\Admin\AdminPromoCodeController;
 use App\Http\Controllers\Api\Admin\AdminSettingsController;
-use App\Http\Controllers\Api\Admin\AdminSubscriptionPlanController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Auth\AdminAuthController;
 use App\Http\Controllers\Api\Auth\SocialAuthController;
 use App\Http\Controllers\Api\Auth\UserAuthController;
-use App\Http\Controllers\Api\StripeWebhookController;
+use App\Http\Controllers\Api\RevenueCatWebhookController;
 use App\Http\Controllers\Api\User\NotificationController;
 use App\Http\Controllers\Api\User\OnboardingController;
 use App\Http\Controllers\Api\User\ProfileController;
-use App\Http\Controllers\Api\User\SubscriptionController;
 use App\Http\Controllers\Api\User\SupportController;
 use App\Http\Controllers\Api\User\UserPredictionController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('webhook/stripe', [StripeWebhookController::class, 'handleWebhook']);
+Route::post('webhook/revenuecat', [RevenueCatWebhookController::class, 'handle']);
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [UserAuthController::class, 'login']);
@@ -49,14 +46,7 @@ Route::middleware(['auth:api', 'role:user'])->group(function () {
     Route::post('user/profile/avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('user/profile/avatar', [ProfileController::class, 'deleteAvatar']);
 
-    Route::get('subscriptions/plans', [SubscriptionController::class, 'plans']);
-    Route::get('subscriptions/my-subscription', [SubscriptionController::class, 'mySubscription']);
-    Route::post('subscriptions/start-trial', [SubscriptionController::class, 'startTrial']);
-    Route::get('subscriptions/validate-promo', [SubscriptionController::class, 'validatePromo']);
-    Route::post('subscriptions/apply-promo', [SubscriptionController::class, 'applyPromo']);
-    Route::delete('subscriptions/cancel', [SubscriptionController::class, 'cancel']);
-
-    Route::get('predictions', [UserPredictionController::class, 'index']);
+    Route::get('predictions/category/{categoryId}', [UserPredictionController::class, 'index']);
     Route::get('predictions/{id}', [UserPredictionController::class, 'show']);
     Route::get('categories', [UserPredictionController::class, 'categories']);
 
@@ -83,19 +73,6 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::delete('predictions/{id}', [AdminPredictionController::class, 'destroy']);
     Route::patch('predictions/{id}/status', [AdminPredictionController::class, 'updateStatus']);
 
-    Route::get('subscriptions/overview', [AdminSubscriptionPlanController::class, 'overview']);
-    Route::get('subscriptions/plans', [AdminSubscriptionPlanController::class, 'index']);
-    Route::post('subscriptions/plans', [AdminSubscriptionPlanController::class, 'store']);
-    Route::put('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'update']);
-    Route::delete('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'destroy']);
-    Route::patch('subscriptions/plans/{id}/toggle-status', [AdminSubscriptionPlanController::class, 'toggleStatus']);
-
-    Route::get('promo-codes', [AdminPromoCodeController::class, 'index']);
-    Route::post('promo-codes', [AdminPromoCodeController::class, 'store']);
-    Route::put('promo-codes/{id}', [AdminPromoCodeController::class, 'update']);
-    Route::delete('promo-codes/{id}', [AdminPromoCodeController::class, 'destroy']);
-    Route::patch('promo-codes/{id}/toggle', [AdminPromoCodeController::class, 'toggle']);
-
     Route::get('users/overview', [AdminUserController::class, 'overview']);
     Route::get('users', [AdminUserController::class, 'index']);
     Route::get('users/{id}', [AdminUserController::class, 'show']);
@@ -103,6 +80,7 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
 
     Route::get('categories', [AdminCategoryController::class, 'index']);
     Route::post('categories', [AdminCategoryController::class, 'store']);
+    Route::get('categories/{id}', [AdminCategoryController::class, 'show']);
     Route::post('categories/{id}', [AdminCategoryController::class, 'update']);
     Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy']);
 

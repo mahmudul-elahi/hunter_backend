@@ -24,11 +24,7 @@ return new class extends Migration
             $table->boolean('is_premium')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('onboarding_completed')->default(false);
-            $table->string('promo_code')->nullable();
-            $table->string('stripe_id')->nullable()->index();
-            $table->string('pm_type')->nullable();
-            $table->string('pm_last_four', 4)->nullable();
-            $table->timestamp('trial_ends_at')->nullable();
+            $table->string('revenuecat_app_user_id')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
         });

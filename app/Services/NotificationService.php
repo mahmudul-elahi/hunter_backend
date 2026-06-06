@@ -4,19 +4,16 @@ namespace App\Services;
 
 use App\Models\AdminSetting;
 use App\Models\Prediction;
-use App\Models\PromoCode;
 use App\Models\User;
 use App\Notifications\AdminNewSubscriptionNotification;
 use App\Notifications\AdminPaymentFailedNotification;
 use App\Notifications\AdminPredictionResultNotification;
-use App\Notifications\AdminPromoCodeUsedNotification;
 use App\Notifications\NewPredictionNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\PaymentFailedNotification;
 use App\Notifications\PaymentSucceededNotification;
 use App\Notifications\SubscriptionCancelledNotification;
 use App\Notifications\SubscriptionRenewalReminderNotification;
-use App\Notifications\TrialStartedNotification;
 use App\Notifications\WelcomeNotification;
 use Carbon\Carbon;
 
@@ -34,7 +31,7 @@ class NotificationService
 
     public function sendNewPrediction(Prediction $prediction): void
     {
-        User::where('is_premium', true)->each(
+        User::where('is_premium', true)->lazy()->each(
             fn (User $user) => $user->notify(new NewPredictionNotification($prediction))
         );
     }
@@ -42,11 +39,6 @@ class NotificationService
     public function sendSubscriptionRenewalReminder(User $user, Carbon $renewalDate): void
     {
         $user->notify(new SubscriptionRenewalReminderNotification($renewalDate));
-    }
-
-    public function sendTrialStarted(User $user): void
-    {
-        $user->notify(new TrialStartedNotification);
     }
 
     public function sendPaymentSucceeded(User $user): void
@@ -80,15 +72,6 @@ class NotificationService
         }
 
         $this->notifyAdmins(new AdminPaymentFailedNotification($subscriber));
-    }
-
-    public function sendAdminPromoCodeUsed(User $subscriber, PromoCode $promoCode): void
-    {
-        if (! $this->adminSettingEnabled('promo_code_used')) {
-            return;
-        }
-
-        $this->notifyAdmins(new AdminPromoCodeUsedNotification($subscriber, $promoCode));
     }
 
     public function sendAdminPredictionResult(Prediction $prediction): void

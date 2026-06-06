@@ -9,10 +9,18 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        $categories = ['Sports', 'Casino', 'Stocks', 'Crypto'];
+        $categories = [
+            ['name' => 'Sports', 'icon' => 'sports', 'image' => 'sports', 'description' => 'Sports predictions'],
+            ['name' => 'Casino', 'icon' => 'casino', 'image' => 'casino', 'description' => 'Casino predictions'],
+            ['name' => 'Stocks', 'icon' => 'stocks', 'image' => 'stocks', 'description' => 'Stocks predictions'],
+            ['name' => 'Crypto', 'icon' => 'crypto', 'image' => 'crypto', 'description' => 'Crypto predictions'],
+        ];
 
-        foreach ($categories as $name) {
-            Category::firstOrCreate(['name' => $name], ['is_active' => true]);
+        foreach ($categories as $data) {
+            Category::firstOrCreate(
+                ['name' => $data['name']],
+                ['icon' => $data['icon'], 'image' => $data['image'], 'description' => $data['description'], 'is_active' => true],
+            );
         }
     }
 }

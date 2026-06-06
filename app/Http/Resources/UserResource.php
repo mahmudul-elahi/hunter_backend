@@ -35,20 +35,13 @@ class UserResource extends JsonResource
      */
     private function resolveSubscription(): ?array
     {
-        $subscription = $this->subscription('default');
-
-        $type = match (true) {
-            $subscription?->onTrial() => 'trial',
-            $subscription?->active() && ! $subscription->onTrial() => 'paid',
-            $subscription?->canceled() => 'cancelled',
-            $subscription?->ended() => 'ended',
-            default => 'none',
-        };
+        $subscription = $this->subscriptions->first();
 
         return [
-            'type' => $type,
-            'trial_ends_at' => $subscription?->trial_ends_at?->toIso8601String(),
-            'ends_at' => $subscription?->ends_at?->toIso8601String(),
+            'type' => $subscription?->status ?? 'none',
+            'product_id' => $subscription?->revenuecat_product_id,
+            'store' => $subscription?->store,
+            'expires_at' => $subscription?->expires_at?->toIso8601String(),
         ];
     }
 }

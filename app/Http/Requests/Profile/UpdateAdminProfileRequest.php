@@ -20,7 +20,7 @@ class UpdateAdminProfileRequest extends FormRequest
         return [
             'first_name' => ['sometimes', 'string', 'max:255'],
             'last_name' => ['sometimes', 'string', 'max:255'],
-            'email' => ['sometimes', 'email', 'max:255', 'unique:users,email,' . auth()->id()],
+            'email' => ['sometimes', 'email', 'max:255', 'unique:users,email,'.auth()->id()],
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }

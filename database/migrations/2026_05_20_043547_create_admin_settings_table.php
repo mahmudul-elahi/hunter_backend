@@ -13,7 +13,6 @@ return new class extends Migration
             $table->boolean('new_subscription')->default(true);
             $table->boolean('payment_failed')->default(true);
             $table->boolean('prediction_result')->default(true);
-            $table->boolean('promo_code_used')->default(true);
             $table->timestamps();
         });
     }

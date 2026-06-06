@@ -8,14 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Cashier\Billable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
-    use Billable, HasFactory, HasRoles, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * @var array<int, string>
@@ -34,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
         'is_premium',
         'is_active',
         'onboarding_completed',
-        'promo_code',
+        'revenuecat_app_user_id',
         'email_verified_at',
     ];
 
@@ -58,6 +57,7 @@ class User extends Authenticatable implements JWTSubject
             'is_premium' => 'boolean',
             'is_active' => 'boolean',
             'onboarding_completed' => 'boolean',
+
         ];
     }
 
@@ -87,5 +87,20 @@ class User extends Authenticatable implements JWTSubject
     public function predictions(): HasMany
     {
         return $this->hasMany(Prediction::class, 'created_by');
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function activeSubscription(): HasMany
+    {
+        return $this->subscriptions()->whereIn('status', ['active']);
+    }
+
+    public function revenueCatAppUserId(): string
+    {
+        return $this->revenuecat_app_user_id ?: (string) $this->id;
     }
 }
