@@ -23,7 +23,7 @@ class RevenueCatWebhookController extends Controller
                 'ip' => $request->ip(),
             ]);
 
-            return response()->json(['message' => 'Unauthorized.'], 401);
+            return response()->json(null, 401);
         }
 
         $event = $request->input('event', []);
@@ -31,22 +31,18 @@ class RevenueCatWebhookController extends Controller
         $appUserId = $event['app_user_id'] ?? null;
 
         if (! $eventId || ! $appUserId) {
-            return response()->json(['message' => 'Invalid RevenueCat webhook payload.'], 422);
+            return response()->json(null, 422);
         }
 
-        // Idempotency: only skip if the event was already fully processed.
-        // Previously this checked for existence only — if processing failed mid-way,
-        // retries would be silently skipped and the user would never get synced.
         $alreadyProcessed = DB::table('revenuecat_webhook_events')
             ->where('event_id', $eventId)
             ->whereNotNull('processed_at')
             ->exists();
 
         if ($alreadyProcessed) {
-            return response()->json(['status' => true, 'message' => 'Event already processed.']);
+            return response()->json(null);
         }
 
-        // Upsert the event record (insert on first attempt, update on retries)
         DB::table('revenuecat_webhook_events')->updateOrInsert(
             ['event_id' => $eventId],
             [
@@ -57,7 +53,6 @@ class RevenueCatWebhookController extends Controller
             ]
         );
 
-        // Ensure created_at is set on first insert
         DB::table('revenuecat_webhook_events')
             ->where('event_id', $eventId)
             ->whereNull('created_at')
@@ -74,7 +69,7 @@ class RevenueCatWebhookController extends Controller
                 'app_user_id' => $appUserId,
             ]);
 
-            return response()->json(['status' => true, 'message' => 'User not found, event acknowledged.']);
+            return response()->json(null);
         }
 
         try {
@@ -91,7 +86,7 @@ class RevenueCatWebhookController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            return response()->json(['status' => true, 'message' => 'RevenueCat webhook processed.']);
+            return response()->json(null);
         } catch (\Throwable $e) {
             Log::error('RevenueCat webhook: processing failed.', [
                 'event_id' => $eventId,
@@ -100,10 +95,7 @@ class RevenueCatWebhookController extends Controller
                 'error' => $e->getMessage(),
             ]);
 
-            // Return 200 so RevenueCat does not endlessly retry a permanently failing event.
-            // The event remains in the DB without processed_at, so a manual retry or
-            // the next webhook for this user will re-attempt the sync.
-            return response()->json(['status' => false, 'message' => 'Processing failed, will retry on next event.']);
+            return response()->json(null);
         }
     }
 }
