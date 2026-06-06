@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PredictionResource;
 use App\Models\Category;
 use App\Models\Prediction;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Laravel\Cashier\Cashier;
 
 class AdminDashboardController extends Controller
 {
@@ -20,7 +20,10 @@ class AdminDashboardController extends Controller
 
         $totalSubscribers = User::where('is_premium', true)->count();
 
-        $monthlyRevenue = $this->fetchMonthlyRevenueFromStripe();
+        $monthlyRevenue = (float) Subscription::whereIn('status', ['active', 'trial'])
+            ->whereMonth('updated_at', now()->month)
+            ->whereYear('updated_at', now()->year)
+            ->sum('price');
 
         return $this->successResponse('Dashboard overview retrieved.', [
             'overall_win_rate' => $overallWinRate,
@@ -28,26 +31,6 @@ class AdminDashboardController extends Controller
             'total_subscribers' => $totalSubscribers,
             'monthly_revenue' => $monthlyRevenue,
         ]);
-    }
-
-    private function fetchMonthlyRevenueFromStripe(): float
-    {
-        try {
-            $stripe = Cashier::stripe();
-
-            $invoices = $stripe->invoices->all([
-                'status' => 'paid',
-                'created' => [
-                    'gte' => now()->startOfMonth()->timestamp,
-                    'lte' => now()->endOfMonth()->timestamp,
-                ],
-                'limit' => 100,
-            ]);
-
-            return collect($invoices->data)->sum('amount_paid') / 100;
-        } catch (\Throwable) {
-            return 0.0;
-        }
     }
 
     public function winRateChart(): JsonResponse

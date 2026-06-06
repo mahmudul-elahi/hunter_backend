@@ -8,22 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('subscription_items', function (Blueprint $table) {
+        Schema::create('revenuecat_webhook_events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id');
-            $table->string('stripe_id')->unique();
-            $table->string('stripe_product');
-            $table->string('stripe_price');
-            $table->string('meter_id')->nullable();
-            $table->integer('quantity')->nullable();
-            $table->string('meter_event_name')->nullable();
+            $table->string('event_id')->unique();
+            $table->string('event_type')->nullable();
+            $table->string('app_user_id')->nullable()->index();
+            $table->json('payload');
+            $table->timestamp('processed_at')->nullable();
             $table->timestamps();
-            $table->index(['subscription_id', 'stripe_price']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('subscription_items');
+        Schema::dropIfExists('revenuecat_webhook_events');
     }
 };

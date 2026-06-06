@@ -20,7 +20,8 @@ class SubscriptionPlanResource extends JsonResource
             'description' => $this->description,
             'features' => $this->features,
             'is_active' => $this->is_active,
-            'stripe_price_id' => $this->stripe_price_id,
+            'revenuecat_product_id' => $this->revenuecat_product_id,
+            'revenuecat_entitlement_id' => $this->revenuecat_entitlement_id,
             'active_subscribers' => $this->active_subscribers ?? 0,
         ];
     }

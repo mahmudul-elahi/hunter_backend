@@ -6,26 +6,30 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Subscription\StorePlanRequest;
 use App\Http\Requests\Subscription\UpdatePlanRequest;
 use App\Http\Resources\SubscriptionPlanResource;
+use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
+use App\Services\RevenueCatService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Laravel\Cashier\Cashier;
+use Illuminate\Support\Facades\Log;
 
 class AdminSubscriptionPlanController extends Controller
 {
+    public function __construct(private readonly RevenueCatService $revenueCatService) {}
+
     public function overview(): JsonResponse
     {
         $totalSubscribers = User::where('is_premium', true)->count();
-
-        $monthlyRevenue = $this->fetchMonthlyRevenueFromStripe();
+        $monthlyRevenue = (float) Subscription::whereIn('status', ['active', 'trial'])
+            ->whereMonth('updated_at', now()->month)
+            ->whereYear('updated_at', now()->year)
+            ->sum('price');
 
         $avgRevenuePerUser = $totalSubscribers > 0
             ? round($monthlyRevenue / $totalSubscribers, 2)
             : 0;
 
-        $churnedThisMonth = DB::table('subscriptions')
-            ->where('stripe_status', 'canceled')
+        $churnedThisMonth = Subscription::whereIn('status', ['cancelled', 'expired', 'refunded'])
             ->whereMonth('updated_at', now()->month)
             ->whereYear('updated_at', now()->year)
             ->count();
@@ -43,26 +47,6 @@ class AdminSubscriptionPlanController extends Controller
         ]);
     }
 
-    private function fetchMonthlyRevenueFromStripe(): float
-    {
-        try {
-            $stripe = Cashier::stripe();
-
-            $invoices = $stripe->invoices->all([
-                'status' => 'paid',
-                'created' => [
-                    'gte' => now()->startOfMonth()->timestamp,
-                    'lte' => now()->endOfMonth()->timestamp,
-                ],
-                'limit' => 100,
-            ]);
-
-            return collect($invoices->data)->sum('amount_paid') / 100;
-        } catch (\Throwable) {
-            return 0.0;
-        }
-    }
-
     public function index(): JsonResponse
     {
         $plans = SubscriptionPlan::withCount([
@@ -77,28 +61,56 @@ class AdminSubscriptionPlanController extends Controller
         $data = $request->validated();
 
         try {
-            $stripe = Cashier::stripe();
+            $this->revenueCatService->createEntitlement([
+                'lookup_key' => $data['revenuecat_entitlement_id'] ?? config('revenuecat.premium_entitlement_id'),
+                'display_name' => $data['name'].' Entitlement',
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('RevenueCat: entitlement may already exist, continuing.', [
+                'error' => $e->getMessage(),
+            ]);
+        }
 
-            $product = $stripe->products->create([
-                'name' => $data['name'],
+        try {
+            $rcProduct = $this->revenueCatService->createProduct([
+                'store_identifier' => $data['revenuecat_product_id'],
+                'type' => 'subscription',
+                'display_name' => $data['name'],
+                'subscription' => [
+                    'duration' => match ($data['billing_period']) {
+                        'monthly' => 'P1M',
+                        'half_yearly' => 'P6M',
+                        'yearly' => 'P1Y',
+                        default => 'P1M',
+                    },
+                ],
             ]);
 
-            $priceParams = [
-                'product' => $product->id,
-                'unit_amount' => (int) ($data['price'] * 100),
-                'currency' => config('cashier.currency', 'usd'),
-                'recurring' => match ($data['billing_period']) {
-                    'yearly' => ['interval' => 'year'],
-                    'half_yearly' => ['interval' => 'month', 'interval_count' => 6],
-                    default => ['interval' => 'month'],
-                },
-            ];
+            $this->revenueCatService->attachProductsToEntitlement(
+                $data['revenuecat_entitlement_id'] ?? config('revenuecat.premium_entitlement_id'),
+                [$rcProduct['id']],
+            );
+        } catch (\Throwable $e) {
+            Log::warning('RevenueCat: product/entitlement setup issue, continuing.', [
+                'error' => $e->getMessage(),
+            ]);
+        }
 
-            $price = $stripe->prices->create($priceParams);
+        try {
+            $rcOffering = $this->revenueCatService->createOffering([
+                'lookup_key' => str($data['name'])->slug('_')->toString().'_offering',
+                'display_name' => $data['name'].' Offering',
+            ]);
 
-            $data['stripe_price_id'] = $price->id;
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to create plan in Stripe: '.$e->getMessage(), 422);
+            $this->revenueCatService->createPackage($rcOffering['id'], [
+                'lookup_key' => str($data['name'])->slug('_')->toString(),
+                'display_name' => $data['name'],
+                'products' => [$rcProduct['id'] ?? $data['revenuecat_product_id']],
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('RevenueCat: offering/package setup issue, continuing.', [
+                'error' => $e->getMessage(),
+            ]);
         }
 
         $plan = SubscriptionPlan::create($data);
@@ -111,14 +123,57 @@ class AdminSubscriptionPlanController extends Controller
         $plan = SubscriptionPlan::findOrFail($id);
         $data = $request->validated();
 
-        if (isset($data['name'])) {
-            try {
-                $stripe = Cashier::stripe();
-                $currentPrice = $stripe->prices->retrieve($plan->stripe_price_id);
-                $stripe->products->update($currentPrice->product, ['name' => $data['name']]);
-            } catch (\Exception $e) {
-                return $this->errorResponse('Failed to update plan in Stripe: '.$e->getMessage(), 422);
+        try {
+            $rcProduct = $this->revenueCatService->findProductByStoreIdentifier($data['revenuecat_product_id'] ?? $plan->revenuecat_product_id);
+
+            if ($rcProduct) {
+                $updateData = [];
+
+                if (isset($data['name']) && $data['name'] !== $plan->name) {
+                    $updateData['display_name'] = $data['name'];
+                }
+
+                if (isset($data['billing_period']) && $data['billing_period'] !== $plan->billing_period) {
+                    $updateData['subscription'] = [
+                        'duration' => match ($data['billing_period']) {
+                            'monthly' => 'P1M',
+                            'half_yearly' => 'P6M',
+                            'yearly' => 'P1Y',
+                            default => 'P1M',
+                        },
+                    ];
+                }
+
+                if (! empty($updateData)) {
+                    $this->revenueCatService->updateProduct($rcProduct['id'], $updateData);
+                }
             }
+
+            if (isset($data['name']) && $data['name'] !== $plan->name) {
+                $rcEntitlement = $this->revenueCatService->findEntitlementByLookupKey(
+                    $data['revenuecat_entitlement_id'] ?? $plan->revenuecat_entitlement_id ?? config('revenuecat.premium_entitlement_id'),
+                );
+
+                if ($rcEntitlement) {
+                    $this->revenueCatService->updateEntitlement($rcEntitlement['id'], [
+                        'display_name' => $data['name'].' Entitlement',
+                    ]);
+                }
+
+                $oldOfferingKey = str($plan->name)->slug('_')->toString().'_offering';
+                $rcOffering = $this->revenueCatService->findOfferingByLookupKey($oldOfferingKey);
+
+                if ($rcOffering) {
+                    $this->revenueCatService->updateOffering($rcOffering['id'], [
+                        'display_name' => $data['name'].' Offering',
+                    ]);
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning('RevenueCat: plan update sync issue, continuing.', [
+                'plan_id' => $id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         $plan->update($data);
@@ -131,6 +186,30 @@ class AdminSubscriptionPlanController extends Controller
         $plan = SubscriptionPlan::findOrFail($id);
         $plan->update(['is_active' => ! $plan->is_active]);
 
+        try {
+            $rcProduct = $this->revenueCatService->findProductByStoreIdentifier($plan->revenuecat_product_id);
+
+            if ($rcProduct) {
+                $plan->is_active
+                    ? $this->revenueCatService->unarchiveProduct($rcProduct['id'])
+                    : $this->revenueCatService->archiveProduct($rcProduct['id']);
+            }
+
+            $offeringKey = str($plan->name)->slug('_')->toString().'_offering';
+            $rcOffering = $this->revenueCatService->findOfferingByLookupKey($offeringKey);
+
+            if ($rcOffering) {
+                $plan->is_active
+                    ? $this->revenueCatService->unarchiveOffering($rcOffering['id'])
+                    : $this->revenueCatService->archiveOffering($rcOffering['id']);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('RevenueCat: plan status toggle sync issue, continuing.', [
+                'plan_id' => $id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
         $status = $plan->is_active ? 'activated' : 'deactivated';
 
         return $this->successResponse("Plan {$status}.", new SubscriptionPlanResource($plan));
@@ -138,27 +217,42 @@ class AdminSubscriptionPlanController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $plan = SubscriptionPlan::findOrFail($id);
+        $plan = SubscriptionPlan::withCount([
+            'activeSubscriptions as active_subscribers',
+        ])->findOrFail($id);
 
-        $activeSubscribers = DB::table('subscriptions')
-            ->where('stripe_price', $plan->stripe_price_id)
-            ->whereIn('stripe_status', ['active', 'trialing'])
-            ->count();
-
-        if ($activeSubscribers > 0) {
+        if ($plan->active_subscribers > 0) {
             $plan->update(['is_active' => false]);
 
             return $this->successResponse(
-                "Plan has {$activeSubscribers} active subscriber(s) — marked inactive so no new users can subscribe. It will need to be deleted manually once all subscriptions end.",
-                ['is_active' => false, 'active_subscribers' => $activeSubscribers]
+                "Plan has {$plan->active_subscribers} active subscriber(s) - marked inactive so no new users can subscribe.",
+                ['is_active' => false, 'active_subscribers' => $plan->active_subscribers]
             );
         }
 
         try {
-            $price = Cashier::stripe()->prices->retrieve($plan->stripe_price_id);
-            Cashier::stripe()->products->update($price->product, ['active' => false]);
-        } catch (\Exception) {
-            // price may not exist in Stripe — continue
+            $rcProduct = $this->revenueCatService->findProductByStoreIdentifier($plan->revenuecat_product_id);
+
+            if ($rcProduct) {
+                $this->revenueCatService->detachProductsFromEntitlement(
+                    $plan->revenuecat_entitlement_id ?? config('revenuecat.premium_entitlement_id'),
+                    [$rcProduct['id']],
+                );
+
+                $this->revenueCatService->archiveProduct($rcProduct['id']);
+            }
+
+            $offeringKey = str($plan->name)->slug('_')->toString().'_offering';
+            $rcOffering = $this->revenueCatService->findOfferingByLookupKey($offeringKey);
+
+            if ($rcOffering) {
+                $this->revenueCatService->archiveOffering($rcOffering['id']);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('RevenueCat: plan deletion sync issue, continuing.', [
+                'plan_id' => $id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         $plan->delete();

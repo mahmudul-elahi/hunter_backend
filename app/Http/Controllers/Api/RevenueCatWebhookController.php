@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\RevenueCatService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+class RevenueCatWebhookController extends Controller
+{
+    public function __construct(private readonly RevenueCatService $revenueCatService) {}
+
+    public function handle(Request $request): JsonResponse
+    {
+        $expectedAuthorization = config('revenuecat.webhook_authorization');
+
+        if ($expectedAuthorization && $request->header('Authorization') !== $expectedAuthorization) {
+            Log::warning('RevenueCat webhook: unauthorized request.', [
+                'ip' => $request->ip(),
+            ]);
+
+            return response()->json(['message' => 'Unauthorized.'], 401);
+        }
+
+        $event = $request->input('event', []);
+        $eventId = $event['id'] ?? null;
+        $appUserId = $event['app_user_id'] ?? null;
+
+        if (! $eventId || ! $appUserId) {
+            return response()->json(['message' => 'Invalid RevenueCat webhook payload.'], 422);
+        }
+
+        // Idempotency: only skip if the event was already fully processed.
+        // Previously this checked for existence only — if processing failed mid-way,
+        // retries would be silently skipped and the user would never get synced.
+        $alreadyProcessed = DB::table('revenuecat_webhook_events')
+            ->where('event_id', $eventId)
+            ->whereNotNull('processed_at')
+            ->exists();
+
+        if ($alreadyProcessed) {
+            return response()->json(['status' => true, 'message' => 'Event already processed.']);
+        }
+
+        // Upsert the event record (insert on first attempt, update on retries)
+        DB::table('revenuecat_webhook_events')->updateOrInsert(
+            ['event_id' => $eventId],
+            [
+                'event_type' => $event['type'] ?? null,
+                'app_user_id' => $appUserId,
+                'payload' => json_encode($request->all()),
+                'updated_at' => now(),
+            ]
+        );
+
+        // Ensure created_at is set on first insert
+        DB::table('revenuecat_webhook_events')
+            ->where('event_id', $eventId)
+            ->whereNull('created_at')
+            ->update(['created_at' => now()]);
+
+        $user = User::where('revenuecat_app_user_id', $appUserId)
+            ->orWhere('id', $appUserId)
+            ->first();
+
+        if (! $user) {
+            Log::info('RevenueCat webhook: user not found, skipping.', [
+                'event_id' => $eventId,
+                'event_type' => $event['type'] ?? null,
+                'app_user_id' => $appUserId,
+            ]);
+
+            return response()->json(['status' => true, 'message' => 'User not found, event acknowledged.']);
+        }
+
+        try {
+            $customerInfo = $this->revenueCatService->getSubscriber($appUserId);
+            $this->revenueCatService->syncUser($user, $customerInfo, $event);
+
+            DB::table('revenuecat_webhook_events')
+                ->where('event_id', $eventId)
+                ->update(['processed_at' => now(), 'updated_at' => now()]);
+
+            Log::info('RevenueCat webhook: processed successfully.', [
+                'event_id' => $eventId,
+                'event_type' => $event['type'] ?? null,
+                'user_id' => $user->id,
+            ]);
+
+            return response()->json(['status' => true, 'message' => 'RevenueCat webhook processed.']);
+        } catch (\Throwable $e) {
+            Log::error('RevenueCat webhook: processing failed.', [
+                'event_id' => $eventId,
+                'event_type' => $event['type'] ?? null,
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            // Return 200 so RevenueCat does not endlessly retry a permanently failing event.
+            // The event remains in the DB without processed_at, so a manual retry or
+            // the next webhook for this user will re-attempt the sync.
+            return response()->json(['status' => false, 'message' => 'Processing failed, will retry on next event.']);
+        }
+    }
+}

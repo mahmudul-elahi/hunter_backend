@@ -16,7 +16,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->json('features');
             $table->boolean('is_active')->default(true);
-            $table->string('stripe_price_id')->nullable();
+            $table->string('revenuecat_product_id')->unique();
+            $table->string('revenuecat_entitlement_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

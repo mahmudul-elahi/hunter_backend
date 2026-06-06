@@ -3,14 +3,13 @@
 use App\Http\Controllers\Api\Admin\AdminCategoryController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AdminPredictionController;
-use App\Http\Controllers\Api\Admin\AdminPromoCodeController;
 use App\Http\Controllers\Api\Admin\AdminSettingsController;
 use App\Http\Controllers\Api\Admin\AdminSubscriptionPlanController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Auth\AdminAuthController;
 use App\Http\Controllers\Api\Auth\SocialAuthController;
 use App\Http\Controllers\Api\Auth\UserAuthController;
-use App\Http\Controllers\Api\StripeWebhookController;
+use App\Http\Controllers\Api\RevenueCatWebhookController;
 use App\Http\Controllers\Api\User\NotificationController;
 use App\Http\Controllers\Api\User\OnboardingController;
 use App\Http\Controllers\Api\User\ProfileController;
@@ -19,7 +18,7 @@ use App\Http\Controllers\Api\User\SupportController;
 use App\Http\Controllers\Api\User\UserPredictionController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('webhook/stripe', [StripeWebhookController::class, 'handleWebhook']);
+Route::post('webhook/revenuecat', [RevenueCatWebhookController::class, 'handle']);
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [UserAuthController::class, 'login']);
@@ -51,9 +50,7 @@ Route::middleware(['auth:api', 'role:user'])->group(function () {
 
     Route::get('subscriptions/plans', [SubscriptionController::class, 'plans']);
     Route::get('subscriptions/my-subscription', [SubscriptionController::class, 'mySubscription']);
-    Route::post('subscriptions/start-trial', [SubscriptionController::class, 'startTrial']);
-    Route::get('subscriptions/validate-promo', [SubscriptionController::class, 'validatePromo']);
-    Route::post('subscriptions/apply-promo', [SubscriptionController::class, 'applyPromo']);
+    Route::post('subscriptions/sync', [SubscriptionController::class, 'sync']);
     Route::delete('subscriptions/cancel', [SubscriptionController::class, 'cancel']);
 
     Route::get('predictions', [UserPredictionController::class, 'index']);
@@ -89,12 +86,6 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::put('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'update']);
     Route::delete('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'destroy']);
     Route::patch('subscriptions/plans/{id}/toggle-status', [AdminSubscriptionPlanController::class, 'toggleStatus']);
-
-    Route::get('promo-codes', [AdminPromoCodeController::class, 'index']);
-    Route::post('promo-codes', [AdminPromoCodeController::class, 'store']);
-    Route::put('promo-codes/{id}', [AdminPromoCodeController::class, 'update']);
-    Route::delete('promo-codes/{id}', [AdminPromoCodeController::class, 'destroy']);
-    Route::patch('promo-codes/{id}/toggle', [AdminPromoCodeController::class, 'toggle']);
 
     Route::get('users/overview', [AdminUserController::class, 'overview']);
     Route::get('users', [AdminUserController::class, 'index']);

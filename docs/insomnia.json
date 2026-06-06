@@ -335,12 +335,12 @@
                                       ]
                       },
                       {
-                          "_id":  "req_u_start_trial",
+                          "_id":  "req_u_sync_subscription",
                           "_type":  "request",
                           "parentId":  "fld_user_subscriptions",
-                          "name":  "Start Trial",
+                          "name":  "Sync RevenueCat Subscription",
                           "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/subscriptions/start-trial",
+                          "url":  "{{ _.baseUrl }}/subscriptions/sync",
                           "headers":  [
                                           {
                                               "name":  "Accept",
@@ -357,7 +357,7 @@
                                       ],
                           "body":  {
                                        "mimeType":  "application/json",
-                                       "text":  "{\n  \"plan_id\": 1,\n  \"payment_method_id\": \"pm_card_visa\"\n}"
+                                       "text":  "{}"
                                    }
                       },
                       {
@@ -401,7 +401,7 @@
                                       ],
                           "body":  {
                                        "mimeType":  "application/json",
-                                       "text":  "{\n  \"plan_id\": 1,\n  \"payment_method_id\": \"pm_card_visa\",\n  \"code\": \"SAVE20\"\n}"
+                                       "text":  "{\n  \"code\": \"SAVE20\"\n}"
                                    }
                       },
                       {
@@ -917,7 +917,7 @@
                                       ],
                           "body":  {
                                        "mimeType":  "application/json",
-                                       "text":  "{\n  \"name\": \"VIP Monthly\",\n  \"price\": 9.99,\n  \"billing_period\": \"monthly\",\n  \"features\": [\"Daily picks\", \"Win rate access\"],\n  \"is_active\": true\n}"
+                                       "text":  "{\n  \"name\": \"VIP Monthly\",\n  \"price\": 9.99,\n  \"billing_period\": \"monthly\",\n  \"features\": [\"Daily picks\", \"Win rate access\"],\n  \"revenuecat_product_id\": \"vip_members_monthly\",\n  \"revenuecat_entitlement_id\": \"premium\",\n  \"is_active\": true\n}"
                                    }
                       },
                       {

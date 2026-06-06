@@ -10,7 +10,6 @@ class AdminSetting extends Model
         'new_subscription',
         'payment_failed',
         'prediction_result',
-        'promo_code_used',
     ];
 
     protected function casts(): array
@@ -19,7 +18,6 @@ class AdminSetting extends Model
             'new_subscription' => 'boolean',
             'payment_failed' => 'boolean',
             'prediction_result' => 'boolean',
-            'promo_code_used' => 'boolean',
         ];
     }
 }

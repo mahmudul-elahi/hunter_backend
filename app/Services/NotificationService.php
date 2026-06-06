@@ -4,12 +4,10 @@ namespace App\Services;
 
 use App\Models\AdminSetting;
 use App\Models\Prediction;
-use App\Models\PromoCode;
 use App\Models\User;
 use App\Notifications\AdminNewSubscriptionNotification;
 use App\Notifications\AdminPaymentFailedNotification;
 use App\Notifications\AdminPredictionResultNotification;
-use App\Notifications\AdminPromoCodeUsedNotification;
 use App\Notifications\NewPredictionNotification;
 use App\Notifications\PasswordChangedNotification;
 use App\Notifications\PaymentFailedNotification;
@@ -80,15 +78,6 @@ class NotificationService
         }
 
         $this->notifyAdmins(new AdminPaymentFailedNotification($subscriber));
-    }
-
-    public function sendAdminPromoCodeUsed(User $subscriber, PromoCode $promoCode): void
-    {
-        if (! $this->adminSettingEnabled('promo_code_used')) {
-            return;
-        }
-
-        $this->notifyAdmins(new AdminPromoCodeUsedNotification($subscriber, $promoCode));
     }
 
     public function sendAdminPredictionResult(Prediction $prediction): void

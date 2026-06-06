@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Cashier\Subscription;
 
 class SubscriptionPlan extends Model
 {
@@ -18,13 +17,14 @@ class SubscriptionPlan extends Model
         'description',
         'features',
         'is_active',
-        'stripe_price_id',
+        'revenuecat_product_id',
+        'revenuecat_entitlement_id',
     ];
 
     public function activeSubscriptions(): HasMany
     {
-        return $this->hasMany(Subscription::class, 'stripe_price', 'stripe_price_id')
-            ->whereIn('stripe_status', ['active', 'trialing']);
+        return $this->hasMany(Subscription::class)
+            ->whereIn('status', ['active', 'trial']);
     }
 
     protected function casts(): array

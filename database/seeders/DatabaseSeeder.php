@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CategorySeeder::class,
             SubscriptionPlanSeeder::class,
-            PromoCodeSeeder::class,
             PredictionSeeder::class,
         ]);
     }

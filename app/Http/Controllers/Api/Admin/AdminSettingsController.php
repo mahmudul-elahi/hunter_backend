@@ -55,7 +55,7 @@ class AdminSettingsController extends Controller
     {
         $settings = AdminSetting::firstOrCreate(
             [],
-            ['new_subscription' => true, 'payment_failed' => true, 'prediction_result' => true, 'promo_code_used' => true],
+            ['new_subscription' => true, 'payment_failed' => true, 'prediction_result' => true],
         );
 
         return $this->successResponse('Notification settings retrieved.', $settings);
@@ -67,7 +67,6 @@ class AdminSettingsController extends Controller
             'new_subscription' => ['sometimes', 'boolean'],
             'payment_failed' => ['sometimes', 'boolean'],
             'prediction_result' => ['sometimes', 'boolean'],
-            'promo_code_used' => ['sometimes', 'boolean'],
         ]);
 
         $settings = AdminSetting::firstOrCreate([]);
