@@ -18,7 +18,7 @@ class UserPredictionController extends Controller
             return $this->premiumRequired();
         }
 
-        $perPage = min((int) $request->query('per_page', 15), 100);
+        $perPage = min($request->integer('per_page', 15), 100);
 
         $paginator = Prediction::with(['category'])
             ->whereHas('category')

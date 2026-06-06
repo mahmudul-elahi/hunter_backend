@@ -21,8 +21,8 @@ class AdminDashboardController extends Controller
         $totalSubscribers = User::where('is_premium', true)->count();
 
         $monthlyRevenue = (float) Subscription::where('status', 'active')
-            ->whereMonth('updated_at', now()->month)
-            ->whereYear('updated_at', now()->year)
+            ->whereMonth('purchased_at', now()->month)
+            ->whereYear('purchased_at', now()->year)
             ->sum('price');
 
         return $this->successResponse('Dashboard overview retrieved.', [
