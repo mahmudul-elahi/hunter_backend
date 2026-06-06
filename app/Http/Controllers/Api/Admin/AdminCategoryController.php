@@ -8,6 +8,7 @@ use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class AdminCategoryController extends Controller
 {
@@ -22,7 +23,13 @@ class AdminCategoryController extends Controller
 
     public function store(StoreCategoryRequest $request): JsonResponse
     {
-        $category = Category::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+
+        $category = Category::create($data);
 
         return $this->successResponse('Category created.', new CategoryResource($category), 201);
     }
@@ -30,7 +37,18 @@ class AdminCategoryController extends Controller
     public function update(UpdateCategoryRequest $request, int $id): JsonResponse
     {
         $category = Category::findOrFail($id);
-        $category->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        } else {
+            unset($data['image']);
+        }
+
+        $category->update($data);
 
         return $this->successResponse('Category updated.', new CategoryResource($category));
     }
