@@ -1,1565 +1,1235 @@
-﻿{
-    "_type":  "export",
-    "__export_format":  4,
-    "__export_date":  "2026-05-17T00:00:00.000Z",
-    "__export_source":  "insomnia.desktop.app",
-    "resources":  [
-                      {
-                          "_id":  "wrk_hunter",
-                          "_type":  "workspace",
-                          "name":  "hunter",
-                          "description":  "Picks Empire API",
-                          "scope":  "collection"
-                      },
-                      {
-                          "_id":  "env_base",
-                          "_type":  "environment",
-                          "parentId":  "wrk_hunter",
-                          "name":  "Base Environment",
-                          "data":  {
-
-                                   }
-                      },
-                      {
-                          "_id":  "env_local",
-                          "_type":  "environment",
-                          "parentId":  "env_base",
-                          "name":  "Local",
-                          "data":  {
-                                       "baseUrl":  "http://localhost:8000/api",
-                                       "token":  ""
-                                   }
-                      },
-                      {
-                          "_id":  "fld_root",
-                          "_type":  "request_group",
-                          "parentId":  "wrk_hunter",
-                          "name":  "Picks Empire"
-                      },
-                      {
-                          "_id":  "fld_user",
-                          "_type":  "request_group",
-                          "parentId":  "fld_root",
-                          "name":  "user"
-                      },
-                      {
-                          "_id":  "req_u_me",
-                          "_type":  "request",
-                          "parentId":  "fld_user",
-                          "name":  "Me",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/me",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "fld_admin",
-                          "_type":  "request_group",
-                          "parentId":  "fld_root",
-                          "name":  "admin"
-                      },
-                      {
-                          "_id":  "fld_user_auth",
-                          "_type":  "request_group",
-                          "parentId":  "fld_user",
-                          "name":  "auth"
-                      },
-                      {
-                          "_id":  "fld_user_onboarding",
-                          "_type":  "request_group",
-                          "parentId":  "fld_user",
-                          "name":  "onboarding"
-                      },
-                      {
-                          "_id":  "fld_user_profile",
-                          "_type":  "request_group",
-                          "parentId":  "fld_user",
-                          "name":  "profile"
-                      },
-                      {
-                          "_id":  "fld_user_subscriptions",
-                          "_type":  "request_group",
-                          "parentId":  "fld_user",
-                          "name":  "subscriptions"
-                      },
-                      {
-                          "_id":  "fld_user_predictions",
-                          "_type":  "request_group",
-                          "parentId":  "fld_user",
-                          "name":  "predictions"
-                      },
-                      {
-                          "_id":  "fld_user_notifications",
-                          "_type":  "request_group",
-                          "parentId":  "fld_user",
-                          "name":  "notifications"
-                      },
-                      {
-                          "_id":  "fld_user_support",
-                          "_type":  "request_group",
-                          "parentId":  "fld_user",
-                          "name":  "support"
-                      },
-                      {
-                          "_id":  "fld_admin_auth",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "auth"
-                      },
-                      {
-                          "_id":  "fld_admin_dashboard",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "dashboard"
-                      },
-                      {
-                          "_id":  "fld_admin_predictions",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "predictions"
-                      },
-                      {
-                          "_id":  "fld_admin_plans",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "subscription plans"
-                      },
-                      {
-                          "_id":  "fld_admin_promo",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "promo codes"
-                      },
-                      {
-                          "_id":  "fld_admin_users",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "users"
-                      },
-                      {
-                          "_id":  "fld_admin_categories",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "categories"
-                      },
-                      {
-                          "_id":  "fld_admin_settings",
-                          "_type":  "request_group",
-                          "parentId":  "fld_admin",
-                          "name":  "settings"
-                      },
-                      {
-                          "_id":  "req_u_save_categories",
-                          "_type":  "request",
-                          "parentId":  "fld_user_onboarding",
-                          "name":  "Save Preferred Categories",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/user/onboarding/categories",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"category_ids\": [1, 2]\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_get_profile",
-                          "_type":  "request",
-                          "parentId":  "fld_user_profile",
-                          "name":  "Get Profile",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/user/profile",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_update_profile",
-                          "_type":  "request",
-                          "parentId":  "fld_user_profile",
-                          "name":  "Update Profile",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/user/profile",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"date_of_birth\": \"1999-02-20\",\n  \"location\": \"Las Vegas, USA\",\n  \"gender\": \"female\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_change_password",
-                          "_type":  "request",
-                          "parentId":  "fld_user_profile",
-                          "name":  "Change Password",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/user/change-password",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"current_password\": \"password\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_update_avatar",
-                          "_type":  "request",
-                          "parentId":  "fld_user_profile",
-                          "name":  "Update Avatar",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/user/profile/avatar",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "multipart/form-data",
-                                       "params":  [
-                                                      {
-                                                          "name":  "avatar",
-                                                          "fileName":  "",
-                                                          "type":  "file"
-                                                      }
-                                                  ]
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_delete_avatar",
-                          "_type":  "request",
-                          "parentId":  "fld_user_profile",
-                          "name":  "Delete Avatar",
-                          "method":  "DELETE",
-                          "url":  "{{ _.baseUrl }}/user/profile/avatar",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_plans",
-                          "_type":  "request",
-                          "parentId":  "fld_user_subscriptions",
-                          "name":  "Get Plans",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/subscriptions/plans",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_my_subscription",
-                          "_type":  "request",
-                          "parentId":  "fld_user_subscriptions",
-                          "name":  "My Subscription",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/subscriptions/my-subscription",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_sync_subscription",
-                          "_type":  "request",
-                          "parentId":  "fld_user_subscriptions",
-                          "name":  "Sync RevenueCat Subscription",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/subscriptions/sync",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_validate_promo",
-                          "_type":  "request",
-                          "parentId":  "fld_user_subscriptions",
-                          "name":  "Validate Promo Code",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/subscriptions/validate-promo?code=SAVE20",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_apply_promo",
-                          "_type":  "request",
-                          "parentId":  "fld_user_subscriptions",
-                          "name":  "Apply Promo Code",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/subscriptions/apply-promo",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"code\": \"SAVE20\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_cancel_sub",
-                          "_type":  "request",
-                          "parentId":  "fld_user_subscriptions",
-                          "name":  "Cancel Subscription",
-                          "method":  "DELETE",
-                          "url":  "{{ _.baseUrl }}/subscriptions/cancel",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_predictions",
-                          "_type":  "request",
-                          "parentId":  "fld_user_predictions",
-                          "name":  "List Predictions",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/predictions",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "category_id",
-                                                 "value":  "",
-                                                 "disabled":  true
-                                             },
-                                             {
-                                                 "name":  "title",
-                                                 "value":  "",
-                                                 "disabled":  true
-                                             },
-                                             {
-                                                 "name":  "per_page",
-                                                 "value":  "15",
-                                                 "disabled":  true
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_u_prediction",
-                          "_type":  "request",
-                          "parentId":  "fld_user_predictions",
-                          "name":  "Get Prediction",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/predictions/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_categories",
-                          "_type":  "request",
-                          "parentId":  "fld_user_predictions",
-                          "name":  "List Categories",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/categories",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_notifications",
-                          "_type":  "request",
-                          "parentId":  "fld_user_notifications",
-                          "name":  "List Notifications",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/notifications",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_mark_read",
-                          "_type":  "request",
-                          "parentId":  "fld_user_notifications",
-                          "name":  "Mark as Read",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/notifications/1/read",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_mark_all_read",
-                          "_type":  "request",
-                          "parentId":  "fld_user_notifications",
-                          "name":  "Mark All as Read",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/notifications/read-all",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_contact",
-                          "_type":  "request",
-                          "parentId":  "fld_user_support",
-                          "name":  "Contact Support",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/support/contact",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"subject\": \"Issue with subscription\",\n  \"message\": \"I need help with my subscription.\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_login",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_auth",
-                          "name":  "Login",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/login",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email\": \"admin@picksempire.com\",\n  \"password\": \"password\"\n}"
-                                   },
-                          "afterResponseScript":  "const json = JSON.parse(insomnia.response.text());\n \nif (json.data.access_token) {\n  insomnia.environment.set(\"token\", json.data.access_token);\n}"
-                      },
-                      {
-                          "_id":  "req_a_logout",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_auth",
-                          "name":  "Logout",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/logout",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_refresh",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_auth",
-                          "name":  "Refresh Token",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/refresh",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_overview",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_dashboard",
-                          "name":  "Overview",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/dashboard/overview",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_win_rate_chart",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_dashboard",
-                          "name":  "Win Rate Chart",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/dashboard/win-rate-chart",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_recent_predictions",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_dashboard",
-                          "name":  "Recent Predictions",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/dashboard/recent-predictions",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_predictions_overview",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_predictions",
-                          "name":  "Predictions Overview",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/predictions/overview",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_list_predictions",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_predictions",
-                          "name":  "List Predictions",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/predictions",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ],
-                          "parameters":  [
-                                             {
-                                                 "name":  "search",
-                                                 "value":  "",
-                                                 "disabled":  true
-                                             },
-                                             {
-                                                 "name":  "category",
-                                                 "value":  "",
-                                                 "disabled":  true
-                                             },
-                                             {
-                                                 "name":  "status",
-                                                 "value":  "active",
-                                                 "disabled":  true
-                                             },
-                                             {
-                                                 "name":  "per_page",
-                                                 "value":  "15",
-                                                 "disabled":  true
-                                             }
-                                         ]
-                      },
-                      {
-                          "_id":  "req_a_create_prediction",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_predictions",
-                          "name":  "Create Prediction",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/predictions",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"category_id\": 1,\n  \"title\": \"Lakers vs Celtics\",\n  \"scheduled_at\": \"2026-06-01 18:00:00\",\n  \"confidence_level\": 85,\n  \"signal\": \"home_win\",\n  \"reason\": \"Lakers have a strong home record.\",\n  \"detailed_summary\": \"Detailed analysis of the match.\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_get_prediction",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_predictions",
-                          "name":  "Get Prediction",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/predictions/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_update_prediction",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_predictions",
-                          "name":  "Update Prediction",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/admin/predictions/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"category_id\": 1,\n  \"title\": \"Lakers vs Celtics\",\n  \"scheduled_at\": \"2026-06-01 18:00:00\",\n  \"confidence_level\": 90,\n  \"signal\": \"home_win\",\n  \"reason\": \"Updated reason.\",\n  \"detailed_summary\": \"Updated detailed summary.\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_delete_prediction",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_predictions",
-                          "name":  "Delete Prediction",
-                          "method":  "DELETE",
-                          "url":  "{{ _.baseUrl }}/admin/predictions/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_update_status",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_predictions",
-                          "name":  "Update Status",
-                          "method":  "PATCH",
-                          "url":  "{{ _.baseUrl }}/admin/predictions/1/status",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"status\": \"win\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_subscriptions_overview",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_plans",
-                          "name":  "Subscriptions Overview",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/subscriptions/overview",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_list_plans",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_plans",
-                          "name":  "List Plans",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/subscriptions/plans",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_create_plan",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_plans",
-                          "name":  "Create Plan",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/subscriptions/plans",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"name\": \"VIP Monthly\",\n  \"price\": 9.99,\n  \"billing_period\": \"monthly\",\n  \"features\": [\"Daily picks\", \"Win rate access\"],\n  \"revenuecat_product_id\": \"vip_members_monthly\",\n  \"revenuecat_entitlement_id\": \"premium\",\n  \"is_active\": true\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_update_plan",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_plans",
-                          "name":  "Update Plan",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/admin/subscriptions/plans/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"name\": \"VIP Yearly\",\n  \"price\": 99.99,\n  \"billing_period\": \"yearly\",\n  \"features\": [\"Daily picks\", \"Win rate access\", \"Priority support\"],\n  \"is_active\": true\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_delete_plan",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_plans",
-                          "name":  "Delete Plan",
-                          "method":  "DELETE",
-                          "url":  "{{ _.baseUrl }}/admin/subscriptions/plans/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_list_promos",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_promo",
-                          "name":  "List Promo Codes",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/promo-codes",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_create_promo",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_promo",
-                          "name":  "Create Promo Code",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/promo-codes",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"code\": \"SAVE20\",\n  \"discount\": 20,\n  \"type\": \"percentage\",\n  \"max_users\": 100,\n  \"status\": \"active\",\n  \"expires_at\": \"2026-12-31 23:59:59\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_update_promo",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_promo",
-                          "name":  "Update Promo Code",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/admin/promo-codes/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"code\": \"SAVE20\",\n  \"discount\": 25,\n  \"type\": \"percentage\",\n  \"max_users\": 200,\n  \"status\": \"active\",\n  \"expires_at\": \"2026-12-31 23:59:59\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_delete_promo",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_promo",
-                          "name":  "Delete Promo Code",
-                          "method":  "DELETE",
-                          "url":  "{{ _.baseUrl }}/admin/promo-codes/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_toggle_promo",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_promo",
-                          "name":  "Toggle Status",
-                          "method":  "PATCH",
-                          "url":  "{{ _.baseUrl }}/admin/promo-codes/1/toggle",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_users_overview",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_users",
-                          "name":  "Users Overview",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/users/overview",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_list_users",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_users",
-                          "name":  "List Users",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/users",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_get_user",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_users",
-                          "name":  "Get User",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/users/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_toggle_user",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_users",
-                          "name":  "Toggle Status",
-                          "method":  "PATCH",
-                          "url":  "{{ _.baseUrl }}/admin/users/1/status",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_list_categories",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_categories",
-                          "name":  "List Categories",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/categories",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_create_category",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_categories",
-                          "name":  "Create Category",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/categories",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"name\": \"Esports\",\n  \"icon\": \"esports-icon\",\n  \"is_active\": true\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_update_category",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_categories",
-                          "name":  "Update Category",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/admin/categories/1",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"name\": \"Sports Updated\",\n  \"icon\": \"sports-icon\",\n  \"is_active\": true\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_settings_profile",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_settings",
-                          "name":  "Get Profile",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/settings/profile",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_update_settings_profile",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_settings",
-                          "name":  "Update Profile",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/admin/settings/profile",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"first_name\": \"Super\",\n  \"last_name\": \"Admin\",\n  \"email\": \"admin@picksempire.com\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_change_password",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_settings",
-                          "name":  "Change Password",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/admin/settings/password",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"current_password\": \"password\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_a_notif_settings",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_settings",
-                          "name":  "Get Notification Settings",
-                          "method":  "GET",
-                          "url":  "{{ _.baseUrl }}/admin/settings/notifications",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_a_update_notif_settings",
-                          "_type":  "request",
-                          "parentId":  "fld_admin_settings",
-                          "name":  "Update Notification Settings",
-                          "method":  "PUT",
-                          "url":  "{{ _.baseUrl }}/admin/settings/notifications",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email_payment_succeeded\": true,\n  \"email_payment_failed\": true,\n  \"email_subscription_cancelled\": true,\n  \"email_trial_ending_reminder\": true\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_login",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Login",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/login",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password\"\n}"
-                                   },
-                          "afterResponseScript":  "const json = JSON.parse(insomnia.response.text());\n \nif (json.data.access_token) {\n  insomnia.environment.set(\"token\", json.data.access_token);\n}"
-                      },
-                      {
-                          "_id":  "req_u_verify_email_otp",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Verify Email OTP",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/verify-email-otp",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email\": \"john@example.com\",\n  \"code\": \"123456\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_resend_verification_otp",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Resend Verification OTP",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/resend-verification-otp",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email\": \"john@example.com\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_register",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Register",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/register",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_logout",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Logout",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/logout",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_refresh",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Refresh Token",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/refresh",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Authorization",
-                                              "value":  "Bearer {{ _.token }}"
-                                          }
-                                      ]
-                      },
-                      {
-                          "_id":  "req_u_forgot_password",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Forgot Password",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/forgot-password",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email\": \"john@example.com\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_verify_otp",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Verify OTP",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/verify-otp",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email\": \"john@example.com\",\n  \"code\": \"123456\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_reset_password",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Reset Password",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/reset-password",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"email\": \"john@example.com\",\n  \"code\": \"123456\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_google_login",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Google Login",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/google",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"access_token\": \"ya29.google-access-token-from-mobile-sdk\"\n}"
-                                   }
-                      },
-                      {
-                          "_id":  "req_u_apple_login",
-                          "_type":  "request",
-                          "parentId":  "fld_user_auth",
-                          "name":  "Apple Login",
-                          "method":  "POST",
-                          "url":  "{{ _.baseUrl }}/auth/apple",
-                          "headers":  [
-                                          {
-                                              "name":  "Accept",
-                                              "value":  "application/json"
-                                          },
-                                          {
-                                              "name":  "Content-Type",
-                                              "value":  "application/json"
-                                          }
-                                      ],
-                          "body":  {
-                                       "mimeType":  "application/json",
-                                       "text":  "{\n  \"identity_token\": \"eyJraWQiOiJhcHBsZS1pZGVudGl0eS10b2tlbi1mcm9tLW1vYmlsZS1zZGtcIn0\"\n}"
-                                   }
-                      }
-                  ]
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2026-06-06T06:01:33+00:00",
+    "__export_source": "insomnia.desktop.app",
+    "resources": [
+        {
+            "_id": "wrk_hunter",
+            "_type": "workspace",
+            "name": "hunter",
+            "description": "Picks Empire API",
+            "scope": "collection"
+        },
+        {
+            "_id": "env_base",
+            "_type": "environment",
+            "parentId": "wrk_hunter",
+            "name": "Base Environment",
+            "data": []
+        },
+        {
+            "_id": "env_local",
+            "_type": "environment",
+            "parentId": "env_base",
+            "name": "Local",
+            "data": {
+                "baseUrl": "http://localhost:8000/api",
+                "token": ""
+            }
+        },
+        {
+            "_id": "fld_root",
+            "_type": "request_group",
+            "parentId": "wrk_hunter",
+            "name": "Picks Empire"
+        },
+        {
+            "_id": "fld_user",
+            "_type": "request_group",
+            "parentId": "fld_root",
+            "name": "user"
+        },
+        {
+            "_id": "req_u_me",
+            "_type": "request",
+            "parentId": "fld_user",
+            "name": "Me",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/me",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "fld_admin",
+            "_type": "request_group",
+            "parentId": "fld_root",
+            "name": "admin"
+        },
+        {
+            "_id": "fld_user_auth",
+            "_type": "request_group",
+            "parentId": "fld_user",
+            "name": "auth"
+        },
+        {
+            "_id": "fld_user_onboarding",
+            "_type": "request_group",
+            "parentId": "fld_user",
+            "name": "onboarding"
+        },
+        {
+            "_id": "fld_user_profile",
+            "_type": "request_group",
+            "parentId": "fld_user",
+            "name": "profile"
+        },
+        {
+            "_id": "fld_user_predictions",
+            "_type": "request_group",
+            "parentId": "fld_user",
+            "name": "predictions"
+        },
+        {
+            "_id": "fld_user_notifications",
+            "_type": "request_group",
+            "parentId": "fld_user",
+            "name": "notifications"
+        },
+        {
+            "_id": "fld_user_support",
+            "_type": "request_group",
+            "parentId": "fld_user",
+            "name": "support"
+        },
+        {
+            "_id": "fld_admin_auth",
+            "_type": "request_group",
+            "parentId": "fld_admin",
+            "name": "auth"
+        },
+        {
+            "_id": "fld_admin_dashboard",
+            "_type": "request_group",
+            "parentId": "fld_admin",
+            "name": "dashboard"
+        },
+        {
+            "_id": "fld_admin_predictions",
+            "_type": "request_group",
+            "parentId": "fld_admin",
+            "name": "predictions"
+        },
+        {
+            "_id": "fld_admin_users",
+            "_type": "request_group",
+            "parentId": "fld_admin",
+            "name": "users"
+        },
+        {
+            "_id": "fld_admin_categories",
+            "_type": "request_group",
+            "parentId": "fld_admin",
+            "name": "categories"
+        },
+        {
+            "_id": "fld_admin_settings",
+            "_type": "request_group",
+            "parentId": "fld_admin",
+            "name": "settings"
+        },
+        {
+            "_id": "req_u_save_categories",
+            "_type": "request",
+            "parentId": "fld_user_onboarding",
+            "name": "Save Preferred Categories",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/user/onboarding/categories",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"category_ids\": [1, 2]\n}"
+            }
+        },
+        {
+            "_id": "req_u_get_profile",
+            "_type": "request",
+            "parentId": "fld_user_profile",
+            "name": "Get Profile",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/user/profile",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_update_profile",
+            "_type": "request",
+            "parentId": "fld_user_profile",
+            "name": "Update Profile",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/user/profile",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"date_of_birth\": \"1999-02-20\",\n  \"location\": \"Las Vegas, USA\",\n  \"gender\": \"female\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_change_password",
+            "_type": "request",
+            "parentId": "fld_user_profile",
+            "name": "Change Password",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/user/change-password",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"current_password\": \"password\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_update_avatar",
+            "_type": "request",
+            "parentId": "fld_user_profile",
+            "name": "Update Avatar",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/user/profile/avatar",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "body": {
+                "mimeType": "multipart/form-data",
+                "params": [
+                    {
+                        "name": "avatar",
+                        "fileName": "",
+                        "type": "file"
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "req_u_delete_avatar",
+            "_type": "request",
+            "parentId": "fld_user_profile",
+            "name": "Delete Avatar",
+            "method": "DELETE",
+            "url": "{{ _.baseUrl }}/user/profile/avatar",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_predictions",
+            "_type": "request",
+            "parentId": "fld_user_predictions",
+            "name": "List Predictions",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/predictions",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "category_id",
+                    "value": "",
+                    "disabled": true
+                },
+                {
+                    "name": "title",
+                    "value": "",
+                    "disabled": true
+                },
+                {
+                    "name": "per_page",
+                    "value": "15",
+                    "disabled": true
+                }
+            ]
+        },
+        {
+            "_id": "req_u_prediction",
+            "_type": "request",
+            "parentId": "fld_user_predictions",
+            "name": "Get Prediction",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/predictions/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_categories",
+            "_type": "request",
+            "parentId": "fld_user_predictions",
+            "name": "List Categories",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/categories",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_notifications",
+            "_type": "request",
+            "parentId": "fld_user_notifications",
+            "name": "List Notifications",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/notifications",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_mark_read",
+            "_type": "request",
+            "parentId": "fld_user_notifications",
+            "name": "Mark as Read",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/notifications/1/read",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_mark_all_read",
+            "_type": "request",
+            "parentId": "fld_user_notifications",
+            "name": "Mark All as Read",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/notifications/read-all",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_contact",
+            "_type": "request",
+            "parentId": "fld_user_support",
+            "name": "Contact Support",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/support/contact",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"subject\": \"Issue with subscription\",\n  \"message\": \"I need help with my subscription.\"\n}"
+            }
+        },
+        {
+            "_id": "req_a_login",
+            "_type": "request",
+            "parentId": "fld_admin_auth",
+            "name": "Login",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/admin/login",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"admin@picksempire.com\",\n  \"password\": \"password\"\n}"
+            },
+            "afterResponseScript": "const json = JSON.parse(insomnia.response.text());\n \nif (json.data.access_token) {\n  insomnia.environment.set(\"token\", json.data.access_token);\n}"
+        },
+        {
+            "_id": "req_a_logout",
+            "_type": "request",
+            "parentId": "fld_admin_auth",
+            "name": "Logout",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/admin/logout",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_refresh",
+            "_type": "request",
+            "parentId": "fld_admin_auth",
+            "name": "Refresh Token",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/admin/refresh",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_overview",
+            "_type": "request",
+            "parentId": "fld_admin_dashboard",
+            "name": "Overview",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/dashboard/overview",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_win_rate_chart",
+            "_type": "request",
+            "parentId": "fld_admin_dashboard",
+            "name": "Win Rate Chart",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/dashboard/win-rate-chart",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_recent_predictions",
+            "_type": "request",
+            "parentId": "fld_admin_dashboard",
+            "name": "Recent Predictions",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/dashboard/recent-predictions",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_predictions_overview",
+            "_type": "request",
+            "parentId": "fld_admin_predictions",
+            "name": "Predictions Overview",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/predictions/overview",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_list_predictions",
+            "_type": "request",
+            "parentId": "fld_admin_predictions",
+            "name": "List Predictions",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/predictions",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "search",
+                    "value": "",
+                    "disabled": true
+                },
+                {
+                    "name": "category",
+                    "value": "",
+                    "disabled": true
+                },
+                {
+                    "name": "status",
+                    "value": "active",
+                    "disabled": true
+                },
+                {
+                    "name": "per_page",
+                    "value": "15",
+                    "disabled": true
+                }
+            ]
+        },
+        {
+            "_id": "req_a_create_prediction",
+            "_type": "request",
+            "parentId": "fld_admin_predictions",
+            "name": "Create Prediction",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/admin/predictions",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"category_id\": 1,\n  \"title\": \"Lakers vs Celtics\",\n  \"scheduled_at\": \"2026-06-01 18:00:00\",\n  \"confidence_level\": 85,\n  \"signal\": \"home_win\",\n  \"reason\": \"Lakers have a strong home record.\",\n  \"detailed_summary\": \"Detailed analysis of the match.\"\n}"
+            }
+        },
+        {
+            "_id": "req_a_get_prediction",
+            "_type": "request",
+            "parentId": "fld_admin_predictions",
+            "name": "Get Prediction",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/predictions/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_update_prediction",
+            "_type": "request",
+            "parentId": "fld_admin_predictions",
+            "name": "Update Prediction",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/admin/predictions/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"category_id\": 1,\n  \"title\": \"Lakers vs Celtics\",\n  \"scheduled_at\": \"2026-06-01 18:00:00\",\n  \"confidence_level\": 90,\n  \"signal\": \"home_win\",\n  \"reason\": \"Updated reason.\",\n  \"detailed_summary\": \"Updated detailed summary.\"\n}"
+            }
+        },
+        {
+            "_id": "req_a_delete_prediction",
+            "_type": "request",
+            "parentId": "fld_admin_predictions",
+            "name": "Delete Prediction",
+            "method": "DELETE",
+            "url": "{{ _.baseUrl }}/admin/predictions/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_update_status",
+            "_type": "request",
+            "parentId": "fld_admin_predictions",
+            "name": "Update Status",
+            "method": "PATCH",
+            "url": "{{ _.baseUrl }}/admin/predictions/1/status",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"status\": \"win\"\n}"
+            }
+        },
+        {
+            "_id": "req_a_users_overview",
+            "_type": "request",
+            "parentId": "fld_admin_users",
+            "name": "Users Overview",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/users/overview",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_list_users",
+            "_type": "request",
+            "parentId": "fld_admin_users",
+            "name": "List Users",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/users",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_get_user",
+            "_type": "request",
+            "parentId": "fld_admin_users",
+            "name": "Get User",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/users/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_toggle_user",
+            "_type": "request",
+            "parentId": "fld_admin_users",
+            "name": "Toggle Status",
+            "method": "PATCH",
+            "url": "{{ _.baseUrl }}/admin/users/1/status",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_list_categories",
+            "_type": "request",
+            "parentId": "fld_admin_categories",
+            "name": "List Categories",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/categories",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_create_category",
+            "_type": "request",
+            "parentId": "fld_admin_categories",
+            "name": "Create Category",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/admin/categories",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Esports\",\n  \"icon\": \"esports-icon\",\n  \"is_active\": true\n}"
+            }
+        },
+        {
+            "_id": "req_a_update_category",
+            "_type": "request",
+            "parentId": "fld_admin_categories",
+            "name": "Update Category",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/admin/categories/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"Sports Updated\",\n  \"icon\": \"sports-icon\",\n  \"is_active\": true\n}"
+            }
+        },
+        {
+            "_id": "req_a_settings_profile",
+            "_type": "request",
+            "parentId": "fld_admin_settings",
+            "name": "Get Profile",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/settings/profile",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_update_settings_profile",
+            "_type": "request",
+            "parentId": "fld_admin_settings",
+            "name": "Update Profile",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/admin/settings/profile",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"first_name\": \"Super\",\n  \"last_name\": \"Admin\",\n  \"email\": \"admin@picksempire.com\"\n}"
+            }
+        },
+        {
+            "_id": "req_a_change_password",
+            "_type": "request",
+            "parentId": "fld_admin_settings",
+            "name": "Change Password",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/admin/settings/password",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"current_password\": \"password\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
+            }
+        },
+        {
+            "_id": "req_a_notif_settings",
+            "_type": "request",
+            "parentId": "fld_admin_settings",
+            "name": "Get Notification Settings",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/settings/notifications",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_a_update_notif_settings",
+            "_type": "request",
+            "parentId": "fld_admin_settings",
+            "name": "Update Notification Settings",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/admin/settings/notifications",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email_payment_succeeded\": true,\n  \"email_payment_failed\": true,\n  \"email_subscription_cancelled\": true,\n  \"email_trial_ending_reminder\": true\n}"
+            }
+        },
+        {
+            "_id": "req_u_login",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Login",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/login",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password\"\n}"
+            },
+            "afterResponseScript": "const json = JSON.parse(insomnia.response.text());\n \nif (json.data.access_token) {\n  insomnia.environment.set(\"token\", json.data.access_token);\n}"
+        },
+        {
+            "_id": "req_u_verify_email_otp",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Verify Email OTP",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/verify-email-otp",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"john@example.com\",\n  \"code\": \"123456\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_resend_verification_otp",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Resend Verification OTP",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/resend-verification-otp",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"john@example.com\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_register",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Register",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/register",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_logout",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Logout",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/logout",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_refresh",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Refresh Token",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/refresh",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
+        },
+        {
+            "_id": "req_u_forgot_password",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Forgot Password",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/forgot-password",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"john@example.com\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_verify_otp",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Verify OTP",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/verify-otp",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"john@example.com\",\n  \"code\": \"123456\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_reset_password",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Reset Password",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/reset-password",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"john@example.com\",\n  \"code\": \"123456\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_google_login",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Google Login",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/google",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"access_token\": \"ya29.google-access-token-from-mobile-sdk\"\n}"
+            }
+        },
+        {
+            "_id": "req_u_apple_login",
+            "_type": "request",
+            "parentId": "fld_user_auth",
+            "name": "Apple Login",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/auth/apple",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"identity_token\": \"eyJraWQiOiJhcHBsZS1pZGVudGl0eS10b2tlbi1mcm9tLW1vYmlsZS1zZGtcIn0\"\n}"
+            }
+        },
+        {
+            "_id": "req_webhook",
+            "_type": "request",
+            "parentId": "fld_root",
+            "name": "RevenueCat Webhook",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/webhook/revenuecat",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ],
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n    \"event\": \"TEST\",\n    \"event_timestamp_ms\": 1717000000000,\n    \"product_id\": \"vip_monthly\",\n    \"entitlement_id\": \"premium\",\n    \"store\": \"app_store\",\n    \"environment\": \"SANDBOX\",\n    \"period_type\": \"introductory\",\n    \"purchased_at_ms\": 1717000000000,\n    \"expiration_at_ms\": 1719592000000,\n    \"app_user_id\": \"user_abc123\"\n}"
+            }
+        }
+    ]
 }
