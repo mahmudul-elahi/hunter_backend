@@ -46,7 +46,7 @@
             "parentId": "fld_user",
             "name": "Me",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/me",
+            "url": "{{ _.baseUrl }}/api/me",
             "headers": [
                 {
                     "name": "Accept",
@@ -142,7 +142,7 @@
             "parentId": "fld_user_onboarding",
             "name": "Save Preferred Categories",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/user/onboarding/categories",
+            "url": "{{ _.baseUrl }}/api/user/onboarding/categories",
             "headers": [
                 {
                     "name": "Accept",
@@ -167,8 +167,8 @@
             "_type": "request",
             "parentId": "fld_user_profile",
             "name": "Get Profile",
-            "method": "GET",
-            "url": "{{ _.baseUrl }}/user/profile",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/api/user/profile",
             "headers": [
                 {
                     "name": "Accept",
@@ -186,7 +186,7 @@
             "parentId": "fld_user_profile",
             "name": "Update Profile",
             "method": "PUT",
-            "url": "{{ _.baseUrl }}/user/profile",
+            "url": "{{ _.baseUrl }}/api/user/profile",
             "headers": [
                 {
                     "name": "Accept",
@@ -212,7 +212,7 @@
             "parentId": "fld_user_profile",
             "name": "Change Password",
             "method": "PUT",
-            "url": "{{ _.baseUrl }}/user/change-password",
+            "url": "{{ _.baseUrl }}/api/user/change-password",
             "headers": [
                 {
                     "name": "Accept",
@@ -237,8 +237,8 @@
             "_type": "request",
             "parentId": "fld_user_profile",
             "name": "Update Avatar",
-            "method": "POST",
-            "url": "{{ _.baseUrl }}/user/profile/avatar",
+            "method": "DELETE",
+            "url": "{{ _.baseUrl }}/api/user/profile/avatar",
             "headers": [
                 {
                     "name": "Accept",
@@ -248,17 +248,7 @@
                     "name": "Authorization",
                     "value": "Bearer {{ _.token }}"
                 }
-            ],
-            "body": {
-                "mimeType": "multipart/form-data",
-                "params": [
-                    {
-                        "name": "avatar",
-                        "fileName": "",
-                        "type": "file"
-                    }
-                ]
-            }
+            ]
         },
         {
             "_id": "req_u_delete_avatar",
@@ -266,7 +256,7 @@
             "parentId": "fld_user_profile",
             "name": "Delete Avatar",
             "method": "DELETE",
-            "url": "{{ _.baseUrl }}/user/profile/avatar",
+            "url": "{{ _.baseUrl }}/api/user/profile/avatar",
             "headers": [
                 {
                     "name": "Accept",
@@ -332,7 +322,7 @@
             "parentId": "fld_user_predictions",
             "name": "List Categories",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/categories",
+            "url": "{{ _.baseUrl }}/api/categories",
             "headers": [
                 {
                     "name": "Accept",
@@ -350,7 +340,7 @@
             "parentId": "fld_user_notifications",
             "name": "List Notifications",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/notifications",
+            "url": "{{ _.baseUrl }}/api/notifications",
             "headers": [
                 {
                     "name": "Accept",
@@ -386,7 +376,7 @@
             "parentId": "fld_user_notifications",
             "name": "Mark All as Read",
             "method": "PUT",
-            "url": "{{ _.baseUrl }}/notifications/read-all",
+            "url": "{{ _.baseUrl }}/api/notifications/read-all",
             "headers": [
                 {
                     "name": "Accept",
@@ -404,7 +394,7 @@
             "parentId": "fld_user_support",
             "name": "Contact Support",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/support/contact",
+            "url": "{{ _.baseUrl }}/api/support/contact",
             "headers": [
                 {
                     "name": "Accept",
@@ -430,7 +420,7 @@
             "parentId": "fld_admin_auth",
             "name": "Login",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/admin/login",
+            "url": "{{ _.baseUrl }}/api/admin/login",
             "headers": [
                 {
                     "name": "Accept",
@@ -453,7 +443,7 @@
             "parentId": "fld_admin_auth",
             "name": "Logout",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/admin/logout",
+            "url": "{{ _.baseUrl }}/api/admin/logout",
             "headers": [
                 {
                     "name": "Accept",
@@ -471,7 +461,7 @@
             "parentId": "fld_admin_auth",
             "name": "Refresh Token",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/admin/refresh",
+            "url": "{{ _.baseUrl }}/api/admin/refresh",
             "headers": [
                 {
                     "name": "Accept",
@@ -489,7 +479,7 @@
             "parentId": "fld_admin_dashboard",
             "name": "Overview",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/dashboard/overview",
+            "url": "{{ _.baseUrl }}/api/admin/dashboard/overview",
             "headers": [
                 {
                     "name": "Accept",
@@ -507,7 +497,7 @@
             "parentId": "fld_admin_dashboard",
             "name": "Win Rate Chart",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/dashboard/win-rate-chart",
+            "url": "{{ _.baseUrl }}/api/admin/dashboard/win-rate-chart",
             "headers": [
                 {
                     "name": "Accept",
@@ -525,7 +515,7 @@
             "parentId": "fld_admin_dashboard",
             "name": "Recent Predictions",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/dashboard/recent-predictions",
+            "url": "{{ _.baseUrl }}/api/admin/dashboard/recent-predictions",
             "headers": [
                 {
                     "name": "Accept",
@@ -543,7 +533,7 @@
             "parentId": "fld_admin_predictions",
             "name": "Predictions Overview",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/predictions/overview",
+            "url": "{{ _.baseUrl }}/api/admin/predictions/overview",
             "headers": [
                 {
                     "name": "Accept",
@@ -560,8 +550,8 @@
             "_type": "request",
             "parentId": "fld_admin_predictions",
             "name": "List Predictions",
-            "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/predictions",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/api/admin/predictions",
             "headers": [
                 {
                     "name": "Accept",
@@ -601,7 +591,7 @@
             "parentId": "fld_admin_predictions",
             "name": "Create Prediction",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/admin/predictions",
+            "url": "{{ _.baseUrl }}/api/admin/predictions",
             "headers": [
                 {
                     "name": "Accept",
@@ -715,7 +705,7 @@
             "parentId": "fld_admin_users",
             "name": "Users Overview",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/users/overview",
+            "url": "{{ _.baseUrl }}/api/admin/users/overview",
             "headers": [
                 {
                     "name": "Accept",
@@ -733,7 +723,7 @@
             "parentId": "fld_admin_users",
             "name": "List Users",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/users",
+            "url": "{{ _.baseUrl }}/api/admin/users",
             "headers": [
                 {
                     "name": "Accept",
@@ -786,8 +776,8 @@
             "_type": "request",
             "parentId": "fld_admin_categories",
             "name": "List Categories",
-            "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/categories",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/api/admin/categories",
             "headers": [
                 {
                     "name": "Accept",
@@ -805,7 +795,7 @@
             "parentId": "fld_admin_categories",
             "name": "Create Category",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/admin/categories",
+            "url": "{{ _.baseUrl }}/api/admin/categories",
             "headers": [
                 {
                     "name": "Accept",
@@ -936,8 +926,8 @@
             "_type": "request",
             "parentId": "fld_admin_settings",
             "name": "Get Profile",
-            "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/settings/profile",
+            "method": "POST",
+            "url": "{{ _.baseUrl }}/api/admin/settings/profile",
             "headers": [
                 {
                     "name": "Accept",
@@ -955,7 +945,7 @@
             "parentId": "fld_admin_settings",
             "name": "Update Profile",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/admin/settings/profile",
+            "url": "{{ _.baseUrl }}/api/admin/settings/profile",
             "headers": [
                 {
                     "name": "Accept",
@@ -981,7 +971,7 @@
             "parentId": "fld_admin_settings",
             "name": "Change Password",
             "method": "PUT",
-            "url": "{{ _.baseUrl }}/admin/settings/password",
+            "url": "{{ _.baseUrl }}/api/admin/settings/password",
             "headers": [
                 {
                     "name": "Accept",
@@ -1006,8 +996,8 @@
             "_type": "request",
             "parentId": "fld_admin_settings",
             "name": "Get Notification Settings",
-            "method": "GET",
-            "url": "{{ _.baseUrl }}/admin/settings/notifications",
+            "method": "PUT",
+            "url": "{{ _.baseUrl }}/api/admin/settings/notifications",
             "headers": [
                 {
                     "name": "Accept",
@@ -1025,7 +1015,7 @@
             "parentId": "fld_admin_settings",
             "name": "Update Notification Settings",
             "method": "PUT",
-            "url": "{{ _.baseUrl }}/admin/settings/notifications",
+            "url": "{{ _.baseUrl }}/api/admin/settings/notifications",
             "headers": [
                 {
                     "name": "Accept",
@@ -1051,7 +1041,7 @@
             "parentId": "fld_user_auth",
             "name": "Login",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/login",
+            "url": "{{ _.baseUrl }}/api/auth/login",
             "headers": [
                 {
                     "name": "Accept",
@@ -1074,7 +1064,7 @@
             "parentId": "fld_user_auth",
             "name": "Verify Email OTP",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/verify-email-otp",
+            "url": "{{ _.baseUrl }}/api/auth/verify-email-otp",
             "headers": [
                 {
                     "name": "Accept",
@@ -1096,7 +1086,7 @@
             "parentId": "fld_user_auth",
             "name": "Resend Verification OTP",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/resend-verification-otp",
+            "url": "{{ _.baseUrl }}/api/auth/resend-verification-otp",
             "headers": [
                 {
                     "name": "Accept",
@@ -1118,7 +1108,7 @@
             "parentId": "fld_user_auth",
             "name": "Register",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/register",
+            "url": "{{ _.baseUrl }}/api/auth/register",
             "headers": [
                 {
                     "name": "Accept",
@@ -1140,7 +1130,7 @@
             "parentId": "fld_user_auth",
             "name": "Logout",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/logout",
+            "url": "{{ _.baseUrl }}/api/auth/logout",
             "headers": [
                 {
                     "name": "Accept",
@@ -1158,7 +1148,7 @@
             "parentId": "fld_user_auth",
             "name": "Refresh Token",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/refresh",
+            "url": "{{ _.baseUrl }}/api/auth/refresh",
             "headers": [
                 {
                     "name": "Accept",
@@ -1176,7 +1166,7 @@
             "parentId": "fld_user_auth",
             "name": "Forgot Password",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/forgot-password",
+            "url": "{{ _.baseUrl }}/api/auth/forgot-password",
             "headers": [
                 {
                     "name": "Accept",
@@ -1198,7 +1188,7 @@
             "parentId": "fld_user_auth",
             "name": "Verify OTP",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/verify-otp",
+            "url": "{{ _.baseUrl }}/api/auth/verify-otp",
             "headers": [
                 {
                     "name": "Accept",
@@ -1220,7 +1210,7 @@
             "parentId": "fld_user_auth",
             "name": "Reset Password",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/reset-password",
+            "url": "{{ _.baseUrl }}/api/auth/reset-password",
             "headers": [
                 {
                     "name": "Accept",
@@ -1242,7 +1232,7 @@
             "parentId": "fld_user_auth",
             "name": "Google Login",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/google",
+            "url": "{{ _.baseUrl }}/api/auth/google",
             "headers": [
                 {
                     "name": "Accept",
@@ -1264,7 +1254,7 @@
             "parentId": "fld_user_auth",
             "name": "Apple Login",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/auth/apple",
+            "url": "{{ _.baseUrl }}/api/auth/apple",
             "headers": [
                 {
                     "name": "Accept",
@@ -1286,7 +1276,7 @@
             "parentId": "fld_root",
             "name": "RevenueCat Webhook",
             "method": "POST",
-            "url": "{{ _.baseUrl }}/webhook/revenuecat",
+            "url": "{{ _.baseUrl }}/api/webhook/revenuecat",
             "headers": [
                 {
                     "name": "Accept",
