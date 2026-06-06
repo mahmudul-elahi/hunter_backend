@@ -12,7 +12,6 @@ class Subscription extends Model
 
     protected $fillable = [
         'user_id',
-        'subscription_plan_id',
         'revenuecat_app_user_id',
         'revenuecat_original_app_user_id',
         'revenuecat_product_id',
