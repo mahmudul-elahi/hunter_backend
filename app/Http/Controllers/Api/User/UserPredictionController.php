@@ -23,8 +23,8 @@ class UserPredictionController extends Controller
         $paginator = Prediction::with(['category'])
             ->whereHas('category')
             ->where('status', 'active')
-            ->when($request->query('category_id'), fn($q, $id) => $q->where('category_id', (int) $id))
-            ->when($request->query('title'), fn($q, $title) => $q->where('title', 'like', "%{$title}%"))
+            ->when($request->query('category_id'), fn ($q, $id) => $q->where('category_id', (int) $id))
+            ->when($request->query('title'), fn ($q, $title) => $q->where('title', 'like', "%{$title}%"))
             ->latest()
             ->paginate($perPage);
 
@@ -56,7 +56,7 @@ class UserPredictionController extends Controller
     public function categories(): JsonResponse
     {
         $categories = Category::withCount([
-            'predictions as active_predictions_count' => fn($query) => $query->where('status', 'active'),
+            'predictions as active_predictions_count' => fn ($query) => $query->where('status', 'active'),
         ])
             ->where('is_active', true)
             ->get();
