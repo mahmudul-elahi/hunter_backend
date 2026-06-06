@@ -46,7 +46,7 @@ Route::middleware(['auth:api', 'role:user'])->group(function () {
     Route::post('user/profile/avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('user/profile/avatar', [ProfileController::class, 'deleteAvatar']);
 
-    Route::get('predictions', [UserPredictionController::class, 'index']);
+    Route::get('predictions/category/{categoryId}', [UserPredictionController::class, 'index']);
     Route::get('predictions/{id}', [UserPredictionController::class, 'show']);
     Route::get('categories', [UserPredictionController::class, 'categories']);
 

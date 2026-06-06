@@ -284,7 +284,7 @@
             "parentId": "fld_user_predictions",
             "name": "List Predictions",
             "method": "GET",
-            "url": "{{ _.baseUrl }}/predictions",
+            "url": "{{ _.baseUrl }}/predictions/category/1",
             "headers": [
                 {
                     "name": "Accept",
@@ -296,10 +296,6 @@
                 }
             ],
             "parameters": [
-                {
-                    "name": "category_id",
-                    "value": "1"
-                },
                 {
                     "name": "title",
                     "value": "",
