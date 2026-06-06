@@ -100,15 +100,19 @@ class RevenueCatService
             $wasPremium = $user->is_premium;
             $isPremium = $status === 'active' || $givesAccess;
 
+            // We no longer store a separate revenuecat_app_user_id; callers
+            // should provide the numeric user id as app_user_id. Only write
+            // the premium flag here.
             $user->update([
                 'is_premium' => $isPremium,
-                'revenuecat_app_user_id' => $user->revenueCatAppUserId(),
             ]);
 
             $subscription = Subscription::updateOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'revenuecat_app_user_id' => $user->revenueCatAppUserId(),
+                    // We store the original RevenueCat customer id returned by
+                    // the V2 API in the subscription record so we can reference
+                    // it if needed for debugging or future lookups.
                     'revenuecat_original_app_user_id' => $customerInfo['id'] ?? null,
                     'revenuecat_product_id' => $productId,
                     'revenuecat_entitlement_id' => $entitlementId,

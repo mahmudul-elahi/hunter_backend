@@ -11,7 +11,10 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('revenuecat_app_user_id')->index();
+            // We store the original RevenueCat customer id for reference, but
+            // we will not rely on it for user matching; matching is done by
+            // users.id (the local DB id) supplied by clients.
+            $table->string('revenuecat_app_user_id')->nullable()->index();
             $table->string('revenuecat_original_app_user_id')->nullable();
             $table->string('revenuecat_product_id')->nullable()->index();
             $table->string('revenuecat_entitlement_id')->nullable()->index();

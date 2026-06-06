@@ -33,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
         'is_premium',
         'is_active',
         'onboarding_completed',
-        'revenuecat_app_user_id',
+        // revenuecat_app_user_id removed — we match webhooks to users by id
         'email_verified_at',
     ];
 

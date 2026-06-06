@@ -58,9 +58,10 @@ class RevenueCatWebhookController extends Controller
             ->whereNull('created_at')
             ->update(['created_at' => now()]);
 
-        $user = User::where('revenuecat_app_user_id', $appUserId)
-            ->orWhere('id', $appUserId)
-            ->first();
+        // Match webhook by users.id only. We no longer support a separate
+        // revenuecat_app_user_id column; clients should pass the numeric
+        // user id (string) as app_user_id from the SDK.
+        $user = User::where('id', $appUserId)->first();
 
         if (! $user) {
             Log::info('RevenueCat webhook: user not found, skipping.', [

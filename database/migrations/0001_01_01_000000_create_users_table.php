@@ -24,6 +24,8 @@ return new class extends Migration
             $table->boolean('is_premium')->default(false);
             $table->boolean('is_active')->default(true);
             $table->boolean('onboarding_completed')->default(false);
+            // legacy column removed in a later migration; user matching is done
+            // by numeric users.id provided by clients via app_user_id.
             $table->string('revenuecat_app_user_id')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
