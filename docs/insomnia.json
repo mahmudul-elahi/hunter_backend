@@ -237,7 +237,7 @@
             "_type": "request",
             "parentId": "fld_user_profile",
             "name": "Update Avatar",
-            "method": "DELETE",
+            "method": "POST",
             "url": "{{ _.baseUrl }}/user/profile/avatar",
             "headers": [
                 {
@@ -248,7 +248,17 @@
                     "name": "Authorization",
                     "value": "Bearer {{ _.token }}"
                 }
-            ]
+            ],
+            "body": {
+                "mimeType": "multipart/form-data",
+                "params": [
+                    {
+                        "name": "avatar",
+                        "fileName": "",
+                        "type": "file"
+                    }
+                ]
+            }
         },
         {
             "_id": "req_u_delete_avatar",
