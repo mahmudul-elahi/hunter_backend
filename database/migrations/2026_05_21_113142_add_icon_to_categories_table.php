@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->string('icon')->nullable()->after('name');
+            $table->string('icon')->after('name');
+            $table->string('image')->after('icon');
+            $table->text('description')->after('image');
         });
     }
 
     public function down(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('icon');
+            $table->dropColumn(['icon', 'image', 'description']);
         });
     }
 };
