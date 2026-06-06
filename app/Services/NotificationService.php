@@ -31,7 +31,7 @@ class NotificationService
 
     public function sendNewPrediction(Prediction $prediction): void
     {
-        User::where('is_premium', true)->each(
+        User::where('is_premium', true)->lazy()->each(
             fn (User $user) => $user->notify(new NewPredictionNotification($prediction))
         );
     }

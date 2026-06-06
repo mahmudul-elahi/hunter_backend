@@ -69,7 +69,10 @@ class AdminSettingsController extends Controller
             'prediction_result' => ['sometimes', 'boolean'],
         ]);
 
-        $settings = AdminSetting::firstOrCreate([]);
+        $settings = AdminSetting::firstOrCreate(
+            [],
+            ['new_subscription' => true, 'payment_failed' => true, 'prediction_result' => true],
+        );
         $settings->update($data);
 
         return $this->successResponse('Notification settings updated.', $settings->fresh());

@@ -35,7 +35,7 @@ class UserResource extends JsonResource
      */
     private function resolveSubscription(): ?array
     {
-        $subscription = $this->subscriptions()->first();
+        $subscription = $this->subscriptions->first();
 
         return [
             'type' => $subscription?->status ?? 'none',
