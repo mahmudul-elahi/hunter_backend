@@ -14,10 +14,9 @@ class AdminUserResource extends JsonResource
     public function toArray(Request $request): array
     {
         $subscription = $this->subscriptions->first();
-        $plan = $subscription?->plan;
 
         $status = $this->is_active ? 'active' : 'deactive';
-        $planStatus = match (true) {
+        $subscriptionStatus = match (true) {
             ! $this->is_active => 'deactive',
             $subscription === null => 'none',
             in_array($subscription?->status, ['active', 'trial'], true) => 'running',
@@ -33,10 +32,8 @@ class AdminUserResource extends JsonResource
             'email' => $this->email,
             'avatar' => $this->avatar ? url(Storage::url($this->avatar)) : null,
             'registered' => $this->created_at?->toDateString(),
-            'plan' => $plan?->name,
-            'plan_status' => $planStatus,
+            'subscription_status' => $subscriptionStatus,
             'status' => $status,
-            'amount' => $plan ? (float) $plan->price : null,
             'subscription' => $subscription ? [
                 'status' => $subscription->status,
                 'product_id' => $subscription->revenuecat_product_id,

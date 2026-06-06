@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\Admin\AdminCategoryController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AdminPredictionController;
 use App\Http\Controllers\Api\Admin\AdminSettingsController;
-use App\Http\Controllers\Api\Admin\AdminSubscriptionPlanController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\Auth\AdminAuthController;
 use App\Http\Controllers\Api\Auth\SocialAuthController;
@@ -79,13 +78,6 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::put('predictions/{id}', [AdminPredictionController::class, 'update']);
     Route::delete('predictions/{id}', [AdminPredictionController::class, 'destroy']);
     Route::patch('predictions/{id}/status', [AdminPredictionController::class, 'updateStatus']);
-
-    Route::get('subscriptions/overview', [AdminSubscriptionPlanController::class, 'overview']);
-    Route::get('subscriptions/plans', [AdminSubscriptionPlanController::class, 'index']);
-    Route::post('subscriptions/plans', [AdminSubscriptionPlanController::class, 'store']);
-    Route::put('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'update']);
-    Route::delete('subscriptions/plans/{id}', [AdminSubscriptionPlanController::class, 'destroy']);
-    Route::patch('subscriptions/plans/{id}/toggle-status', [AdminSubscriptionPlanController::class, 'toggleStatus']);
 
     Route::get('users/overview', [AdminUserController::class, 'overview']);
     Route::get('users', [AdminUserController::class, 'index']);

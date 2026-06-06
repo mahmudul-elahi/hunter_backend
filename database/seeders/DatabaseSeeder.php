@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminSeeder::class,
             CategorySeeder::class,
-            SubscriptionPlanSeeder::class,
             PredictionSeeder::class,
         ]);
     }

@@ -31,7 +31,7 @@ class AdminUserController extends Controller
         $perPage = min($request->integer('per_page', 15), 100);
 
         $users = User::whereHas('roles', fn ($q) => $q->where('name', 'user'))
-            ->with('subscriptions.plan')
+            ->with('subscriptions')
             ->when($request->query('is_premium'), fn ($q, $v) => $q->where('is_premium', filter_var($v, FILTER_VALIDATE_BOOLEAN)))
             ->when($request->query('search'), fn ($q, $s) => $q->where(function ($q) use ($s) {
                 $q->where('first_name', 'like', "%$s%")
@@ -45,7 +45,7 @@ class AdminUserController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $user = User::with('subscriptions.plan')->findOrFail($id);
+        $user = User::with('subscriptions')->findOrFail($id);
 
         return $this->successResponse('User retrieved.', new UserResource($user));
     }

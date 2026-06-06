@@ -35,11 +35,10 @@ class UserResource extends JsonResource
      */
     private function resolveSubscription(): ?array
     {
-        $subscription = $this->subscriptions()->with('plan')->first();
+        $subscription = $this->subscriptions()->first();
 
         return [
             'type' => $subscription?->status ?? 'none',
-            'plan' => $subscription?->plan?->name,
             'product_id' => $subscription?->revenuecat_product_id,
             'store' => $subscription?->store,
             'trial_ends_at' => $subscription?->trial_ends_at?->toIso8601String(),

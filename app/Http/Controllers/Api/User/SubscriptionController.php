@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\SubscriptionPlanResource;
-use App\Models\SubscriptionPlan;
 use App\Services\RevenueCatService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -13,20 +11,9 @@ class SubscriptionController extends Controller
 {
     public function __construct(private readonly RevenueCatService $revenueCatService) {}
 
-    public function plans(): JsonResponse
-    {
-        $plans = SubscriptionPlan::where('is_active', true)->get();
-
-        return $this->successResponse('Plans retrieved.', [
-            'app_user_id' => Auth::user()->revenueCatAppUserId(),
-            'premium_entitlement_id' => config('revenuecat.premium_entitlement_id'),
-            'plans' => SubscriptionPlanResource::collection($plans),
-        ]);
-    }
-
     public function mySubscription(): JsonResponse
     {
-        $user = Auth::user()->load(['subscriptions.plan']);
+        $user = Auth::user()->load('subscriptions');
         $subscription = $user->subscriptions->first();
 
         return $this->successResponse('Subscription retrieved.', [
@@ -36,7 +23,6 @@ class SubscriptionController extends Controller
             'subscription_type' => $subscription?->status ?? 'none',
             'subscription' => $subscription ? [
                 'status' => $subscription->status,
-                'plan' => $subscription->plan?->name,
                 'product_id' => $subscription->revenuecat_product_id,
                 'store' => $subscription->store,
                 'environment' => $subscription->environment,
