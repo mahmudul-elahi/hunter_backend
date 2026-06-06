@@ -21,8 +21,7 @@ class UserSeeder extends Seeder
                 'is_premium' => true,
                 'is_active' => true,
                 'onboarding_completed' => true,
-                // legacy demo id; not required when using numeric DB ids as app_user_id
-                'revenuecat_app_user_id' => null,
+                // legacy demo id removed; we use numeric DB ids as app_user_id
                 'date_of_birth' => '1995-06-15',
                 'location' => 'New York, USA',
                 'gender' => 'male',
@@ -34,7 +33,7 @@ class UserSeeder extends Seeder
         Subscription::firstOrCreate(
             ['user_id' => $premiumUser->id],
             [
-                'revenuecat_app_user_id' => null,
+                
                 'revenuecat_original_app_user_id' => 'original_user_premium_1',
                 'revenuecat_product_id' => 'vip_monthly',
                 'revenuecat_entitlement_id' => 'premium',
@@ -63,7 +62,7 @@ class UserSeeder extends Seeder
                 'is_premium' => false,
                 'is_active' => true,
                 'onboarding_completed' => false,
-                'revenuecat_app_user_id' => null,
+                
                 'date_of_birth' => '1999-02-20',
                 'location' => 'Las Vegas, USA',
                 'gender' => 'female',
