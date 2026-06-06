@@ -25,7 +25,6 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->boolean('onboarding_completed')->default(false);
             $table->string('revenuecat_app_user_id')->nullable()->unique();
-            $table->timestamp('trial_ends_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

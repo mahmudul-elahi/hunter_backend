@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('subscription_plan_id')->nullable()->constrained()->nullOnDelete();
             $table->string('revenuecat_app_user_id')->index();
             $table->string('revenuecat_original_app_user_id')->nullable();
             $table->string('revenuecat_product_id')->nullable()->index();
@@ -22,7 +21,6 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->nullable();
             $table->string('currency', 3)->nullable();
             $table->timestamp('purchased_at')->nullable();
-            $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamp('billing_issue_at')->nullable();
