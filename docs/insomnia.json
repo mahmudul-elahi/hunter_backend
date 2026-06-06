@@ -1,7 +1,7 @@
 {
     "_type": "export",
     "__export_format": 4,
-    "__export_date": "2026-06-06T06:01:33+00:00",
+    "__export_date": "2026-06-06T06:17:39+00:00",
     "__export_source": "insomnia.desktop.app",
     "resources": [
         {
@@ -826,16 +826,56 @@
                 }
             ],
             "body": {
-                "mimeType": "application/json",
-                "text": "{\n  \"name\": \"Esports\",\n  \"icon\": \"esports-icon\",\n  \"is_active\": true\n}"
+                "mimeType": "multipart/form-data",
+                "params": [
+                    {
+                        "name": "name",
+                        "value": "Esports"
+                    },
+                    {
+                        "name": "icon",
+                        "value": "esports-icon"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Esports predictions"
+                    },
+                    {
+                        "name": "image",
+                        "fileName": "",
+                        "type": "file"
+                    },
+                    {
+                        "name": "is_active",
+                        "value": "true"
+                    }
+                ]
             }
+        },
+        {
+            "_id": "req_a_show_category",
+            "_type": "request",
+            "parentId": "fld_admin_categories",
+            "name": "Show Category",
+            "method": "GET",
+            "url": "{{ _.baseUrl }}/admin/categories/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
         },
         {
             "_id": "req_a_update_category",
             "_type": "request",
             "parentId": "fld_admin_categories",
             "name": "Update Category",
-            "method": "PUT",
+            "method": "POST",
             "url": "{{ _.baseUrl }}/admin/categories/1",
             "headers": [
                 {
@@ -852,9 +892,49 @@
                 }
             ],
             "body": {
-                "mimeType": "application/json",
-                "text": "{\n  \"name\": \"Sports Updated\",\n  \"icon\": \"sports-icon\",\n  \"is_active\": true\n}"
+                "mimeType": "multipart/form-data",
+                "params": [
+                    {
+                        "name": "name",
+                        "value": "Sports Updated"
+                    },
+                    {
+                        "name": "icon",
+                        "value": "sports-icon"
+                    },
+                    {
+                        "name": "description",
+                        "value": "Updated sports predictions"
+                    },
+                    {
+                        "name": "image",
+                        "fileName": "",
+                        "type": "file"
+                    },
+                    {
+                        "name": "is_active",
+                        "value": "true"
+                    }
+                ]
             }
+        },
+        {
+            "_id": "req_a_delete_category",
+            "_type": "request",
+            "parentId": "fld_admin_categories",
+            "name": "Delete Category",
+            "method": "DELETE",
+            "url": "{{ _.baseUrl }}/admin/categories/1",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
         },
         {
             "_id": "req_a_settings_profile",

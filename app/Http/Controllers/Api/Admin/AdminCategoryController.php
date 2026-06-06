@@ -34,6 +34,15 @@ class AdminCategoryController extends Controller
         return $this->successResponse('Category created.', new CategoryResource($category), 201);
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $category = Category::withCount([
+            'predictions as active_predictions_count' => fn ($query) => $query->where('status', 'active'),
+        ])->findOrFail($id);
+
+        return $this->successResponse('Category retrieved.', new CategoryResource($category));
+    }
+
     public function update(UpdateCategoryRequest $request, int $id): JsonResponse
     {
         $category = Category::findOrFail($id);
@@ -56,6 +65,11 @@ class AdminCategoryController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $category = Category::findOrFail($id);
+
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
+        }
+
         $category->delete();
 
         return $this->successResponse('Category deleted.');
