@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'icon' => $this->icon,
-            'image' => $this->image ? Storage::url($this->image) : null,
+            'image' => $this->image ? url(Storage::url($this->image)) : null,
             'description' => $this->description,
             'win_rate' => $this->win_rate,
             'active_predictions_count' => $this->when(isset($this->active_predictions_count), (int) $this->active_predictions_count),
