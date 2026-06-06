@@ -12,7 +12,6 @@ use App\Http\Controllers\Api\RevenueCatWebhookController;
 use App\Http\Controllers\Api\User\NotificationController;
 use App\Http\Controllers\Api\User\OnboardingController;
 use App\Http\Controllers\Api\User\ProfileController;
-use App\Http\Controllers\Api\User\SubscriptionController;
 use App\Http\Controllers\Api\User\SupportController;
 use App\Http\Controllers\Api\User\UserPredictionController;
 use Illuminate\Support\Facades\Route;
@@ -46,11 +45,6 @@ Route::middleware(['auth:api', 'role:user'])->group(function () {
     Route::put('user/change-password', [ProfileController::class, 'changePassword']);
     Route::post('user/profile/avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('user/profile/avatar', [ProfileController::class, 'deleteAvatar']);
-
-    Route::get('subscriptions/plans', [SubscriptionController::class, 'plans']);
-    Route::get('subscriptions/my-subscription', [SubscriptionController::class, 'mySubscription']);
-    Route::post('subscriptions/sync', [SubscriptionController::class, 'sync']);
-    Route::delete('subscriptions/cancel', [SubscriptionController::class, 'cancel']);
 
     Route::get('predictions', [UserPredictionController::class, 'index']);
     Route::get('predictions/{id}', [UserPredictionController::class, 'show']);
