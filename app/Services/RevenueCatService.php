@@ -95,16 +95,14 @@ class RevenueCatService
 
             $expiresAt = $this->parseTimestampMs($activeSub['current_period_ends_at'] ?? null);
             $startsAt = $this->parseTimestampMs($activeSub['starts_at'] ?? null);
-            $trialEndsAt = ($activeSub['status'] ?? null) === 'trialing' ? $expiresAt : null;
 
             $status = $this->resolveStatusFromV2($activeSub, $event);
             $wasPremium = $user->is_premium;
-            $isPremium = in_array($status, ['active', 'trial'], true) || $givesAccess;
+            $isPremium = $status === 'active' || $givesAccess;
 
             $user->update([
                 'is_premium' => $isPremium,
                 'revenuecat_app_user_id' => $user->revenueCatAppUserId(),
-                'trial_ends_at' => $trialEndsAt,
             ]);
 
             $subscription = Subscription::updateOrCreate(
@@ -121,7 +119,6 @@ class RevenueCatService
                     'currency' => $event['currency'] ?? null,
                     'purchased_at' => $startsAt
                         ?? $this->parseMilliseconds($event['purchased_at_ms'] ?? null),
-                    'trial_ends_at' => $trialEndsAt,
                     'expires_at' => $expiresAt,
                     'cancelled_at' => $this->parseTimestampMs($activeSub['pending_changes']['cancelled_at'] ?? null)
                         ?? $this->parseDate($event['unsubscribe_detected_at'] ?? null),
@@ -203,8 +200,7 @@ class RevenueCatService
         $v2Status = $subscriptionData['status'] ?? null;
 
         return match ($v2Status) {
-            'trialing' => 'trial',
-            'active', 'in_grace_period' => 'active',
+            'trialing', 'active', 'in_grace_period' => 'active',
             'expired' => 'expired',
             'in_billing_retry' => 'billing_issue',
             'paused' => 'cancelled',
@@ -216,15 +212,12 @@ class RevenueCatService
     {
         $eventType = $event['type'] ?? null;
 
-        if (! $wasPremium && in_array($status, ['active', 'trial'], true)) {
-            $status === 'trial'
-                ? $this->notificationService->sendTrialStarted($user)
-                : $this->notificationService->sendPaymentSucceeded($user);
-
+        if (! $wasPremium && $status === 'active') {
+            $this->notificationService->sendPaymentSucceeded($user);
             $this->notificationService->sendAdminNewSubscription($user);
         }
 
-        if ($wasPremium && ! in_array($status, ['active', 'trial'], true)) {
+        if ($wasPremium && $status !== 'active') {
             $eventType === 'BILLING_ISSUE'
                 ? $this->notificationService->sendPaymentFailed($user)
                 : $this->notificationService->sendSubscriptionCancelled($user);

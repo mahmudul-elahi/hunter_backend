@@ -34,7 +34,6 @@ class User extends Authenticatable implements JWTSubject
         'is_active',
         'onboarding_completed',
         'revenuecat_app_user_id',
-        'trial_ends_at',
         'email_verified_at',
     ];
 
@@ -58,7 +57,7 @@ class User extends Authenticatable implements JWTSubject
             'is_premium' => 'boolean',
             'is_active' => 'boolean',
             'onboarding_completed' => 'boolean',
-            'trial_ends_at' => 'datetime',
+
         ];
     }
 
@@ -97,7 +96,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function activeSubscription(): HasMany
     {
-        return $this->subscriptions()->whereIn('status', ['active', 'trial']);
+        return $this->subscriptions()->whereIn('status', ['active']);
     }
 
     public function revenueCatAppUserId(): string

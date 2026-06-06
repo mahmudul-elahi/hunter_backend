@@ -20,7 +20,7 @@ class AdminDashboardController extends Controller
 
         $totalSubscribers = User::where('is_premium', true)->count();
 
-        $monthlyRevenue = (float) Subscription::whereIn('status', ['active', 'trial'])
+        $monthlyRevenue = (float) Subscription::where('status', 'active')
             ->whereMonth('updated_at', now()->month)
             ->whereYear('updated_at', now()->year)
             ->sum('price');

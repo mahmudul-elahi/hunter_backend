@@ -14,7 +14,6 @@ use App\Notifications\PaymentFailedNotification;
 use App\Notifications\PaymentSucceededNotification;
 use App\Notifications\SubscriptionCancelledNotification;
 use App\Notifications\SubscriptionRenewalReminderNotification;
-use App\Notifications\TrialStartedNotification;
 use App\Notifications\WelcomeNotification;
 use Carbon\Carbon;
 
@@ -40,11 +39,6 @@ class NotificationService
     public function sendSubscriptionRenewalReminder(User $user, Carbon $renewalDate): void
     {
         $user->notify(new SubscriptionRenewalReminderNotification($renewalDate));
-    }
-
-    public function sendTrialStarted(User $user): void
-    {
-        $user->notify(new TrialStartedNotification);
     }
 
     public function sendPaymentSucceeded(User $user): void

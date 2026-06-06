@@ -19,7 +19,7 @@ class AdminUserResource extends JsonResource
         $subscriptionStatus = match (true) {
             ! $this->is_active => 'deactive',
             $subscription === null => 'none',
-            in_array($subscription?->status, ['active', 'trial'], true) => 'running',
+            $subscription?->status === 'active' => 'running',
             $subscription?->status === 'billing_issue' => 'billing_issue',
             in_array($subscription?->status, ['cancelled', 'expired', 'refunded'], true) => 'expired',
             default => 'expired',

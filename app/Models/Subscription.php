@@ -23,7 +23,6 @@ class Subscription extends Model
         'price',
         'currency',
         'purchased_at',
-        'trial_ends_at',
         'expires_at',
         'cancelled_at',
         'billing_issue_at',
@@ -36,7 +35,6 @@ class Subscription extends Model
         return [
             'price' => 'decimal:2',
             'purchased_at' => 'datetime',
-            'trial_ends_at' => 'datetime',
             'expires_at' => 'datetime',
             'cancelled_at' => 'datetime',
             'billing_issue_at' => 'datetime',
@@ -51,7 +49,7 @@ class Subscription extends Model
 
     public function isActive(): bool
     {
-        return in_array($this->status, ['active', 'trial'], true)
+        return $this->status === 'active'
             && ($this->expires_at === null || $this->expires_at->isFuture());
     }
 }
