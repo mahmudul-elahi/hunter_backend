@@ -55,7 +55,11 @@ class UserPredictionController extends Controller
 
     public function categories(): JsonResponse
     {
-        $categories = Category::where('is_active', true)->get();
+        $categories = Category::withCount([
+            'predictions as active_predictions_count' => fn ($query) => $query->where('status', 'active'),
+        ])
+            ->where('is_active', true)
+            ->get();
 
         return $this->successResponse('Categories retrieved.', CategoryResource::collection($categories));
     }
