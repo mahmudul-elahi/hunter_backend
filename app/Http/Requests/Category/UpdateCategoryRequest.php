@@ -19,7 +19,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
-            'icon' => ['sometimes', 'string', 'max:255'],
+            'icon' => ['sometimes', 'file', 'mimes:svg', 'extensions:svg', 'max:2048'],
             'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg,webp,svg', 'max:2048'],
             'description' => ['sometimes', 'string'],
             'is_active' => ['boolean'],

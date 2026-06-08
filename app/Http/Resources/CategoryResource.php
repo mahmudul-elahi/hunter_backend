@@ -16,7 +16,7 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'icon' => $this->icon,
+            'icon' => $this->icon ? url(Storage::url($this->icon)) : null,
             'image' => $this->image ? url(Storage::url($this->image)) : null,
             'description' => $this->description,
             'win_rate' => $this->win_rate,

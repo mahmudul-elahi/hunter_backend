@@ -19,7 +19,7 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'icon' => ['required', 'string', 'max:255'],
+            'icon' => ['required', 'file', 'mimes:svg', 'extensions:svg', 'max:2048'],
             'image' => ['required', 'image', 'mimes:png,jpg,jpeg,webp,svg', 'max:2048'],
             'description' => ['required', 'string'],
             'is_active' => ['boolean'],

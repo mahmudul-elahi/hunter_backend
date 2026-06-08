@@ -25,6 +25,8 @@ class AdminCategoryController extends Controller
     {
         $data = $request->validated();
 
+        $data['icon'] = $request->file('icon')->store('categories/icons', 'public');
+
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('categories', 'public');
         }
@@ -48,6 +50,13 @@ class AdminCategoryController extends Controller
         $category = Category::findOrFail($id);
         $data = $request->validated();
 
+        if ($request->hasFile('icon')) {
+            Storage::disk('public')->delete($category->icon);
+            $data['icon'] = $request->file('icon')->store('categories/icons', 'public');
+        } else {
+            unset($data['icon']);
+        }
+
         if ($request->hasFile('image')) {
             if ($category->image) {
                 Storage::disk('public')->delete($category->image);
@@ -62,9 +71,23 @@ class AdminCategoryController extends Controller
         return $this->successResponse('Category updated.', new CategoryResource($category));
     }
 
+    public function toggleStatus(int $id): JsonResponse
+    {
+        $category = Category::findOrFail($id);
+
+        $category->is_active = ! $category->is_active;
+        $category->save();
+
+        $message = $category->is_active ? 'Category activated.' : 'Category deactivated.';
+
+        return $this->successResponse($message, new CategoryResource($category));
+    }
+
     public function destroy(int $id): JsonResponse
     {
         $category = Category::findOrFail($id);
+
+        Storage::disk('public')->delete($category->icon);
 
         if ($category->image) {
             Storage::disk('public')->delete($category->image);

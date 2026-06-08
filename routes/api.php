@@ -82,6 +82,7 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin'])->group(function (
     Route::post('categories', [AdminCategoryController::class, 'store']);
     Route::get('categories/{id}', [AdminCategoryController::class, 'show']);
     Route::post('categories/{id}', [AdminCategoryController::class, 'update']);
+    Route::patch('categories/{id}/status', [AdminCategoryController::class, 'toggleStatus']);
     Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy']);
 
     Route::get('me', [AdminSettingsController::class, 'profile']);

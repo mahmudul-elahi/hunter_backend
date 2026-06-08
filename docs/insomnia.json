@@ -167,7 +167,7 @@
             "_type": "request",
             "parentId": "fld_user_profile",
             "name": "Get Profile",
-            "method": "PUT",
+            "method": "GET",
             "url": "{{ _.baseUrl }}/user/profile",
             "headers": [
                 {
@@ -560,7 +560,7 @@
             "_type": "request",
             "parentId": "fld_admin_predictions",
             "name": "List Predictions",
-            "method": "POST",
+            "method": "GET",
             "url": "{{ _.baseUrl }}/admin/predictions",
             "headers": [
                 {
@@ -786,7 +786,7 @@
             "_type": "request",
             "parentId": "fld_admin_categories",
             "name": "List Categories",
-            "method": "POST",
+            "method": "GET",
             "url": "{{ _.baseUrl }}/admin/categories",
             "headers": [
                 {
@@ -814,10 +814,6 @@
                 {
                     "name": "Authorization",
                     "value": "Bearer {{ _.token }}"
-                },
-                {
-                    "name": "Content-Type",
-                    "value": "application/json"
                 }
             ],
             "body": {
@@ -829,7 +825,8 @@
                     },
                     {
                         "name": "icon",
-                        "value": "esports-icon"
+                        "fileName": "",
+                        "type": "file"
                     },
                     {
                         "name": "description",
@@ -880,10 +877,6 @@
                 {
                     "name": "Authorization",
                     "value": "Bearer {{ _.token }}"
-                },
-                {
-                    "name": "Content-Type",
-                    "value": "application/json"
                 }
             ],
             "body": {
@@ -895,7 +888,8 @@
                     },
                     {
                         "name": "icon",
-                        "value": "sports-icon"
+                        "fileName": "",
+                        "type": "file"
                     },
                     {
                         "name": "description",
@@ -912,6 +906,24 @@
                     }
                 ]
             }
+        },
+        {
+            "_id": "req_a_toggle_category",
+            "_type": "request",
+            "parentId": "fld_admin_categories",
+            "name": "Toggle Status",
+            "method": "PATCH",
+            "url": "{{ _.baseUrl }}/admin/categories/1/status",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Authorization",
+                    "value": "Bearer {{ _.token }}"
+                }
+            ]
         },
         {
             "_id": "req_a_delete_category",
@@ -936,7 +948,7 @@
             "_type": "request",
             "parentId": "fld_admin_settings",
             "name": "Get Profile",
-            "method": "POST",
+            "method": "GET",
             "url": "{{ _.baseUrl }}/admin/settings/profile",
             "headers": [
                 {
@@ -1006,7 +1018,7 @@
             "_type": "request",
             "parentId": "fld_admin_settings",
             "name": "Get Notification Settings",
-            "method": "PUT",
+            "method": "GET",
             "url": "{{ _.baseUrl }}/admin/settings/notifications",
             "headers": [
                 {
@@ -1025,7 +1037,7 @@
             "parentId": "fld_admin_settings",
             "name": "Update Notification Settings",
             "method": "PUT",
-            "url": "{{ _.baseUrl }}/api/admin/settings/notifications",
+            "url": "{{ _.baseUrl }}/admin/settings/notifications",
             "headers": [
                 {
                     "name": "Accept",
