@@ -52,7 +52,7 @@ return [
         'title' => 'Picks Empire API',
     ],
 
-    'renderer' => 'elements',
+    'renderer' => 'scalar',
 
     'renderers' => [
         /*
