@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $premiumUser = User::firstOrCreate(
+        $premiumUser = User::updateOrCreate(
             ['email' => 'john@example.com'],
             [
                 'first_name' => 'John',
@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
                 'is_premium' => true,
                 'is_active' => true,
                 'onboarding_completed' => true,
-                // legacy demo id removed; we use numeric DB ids as app_user_id
                 'date_of_birth' => '1995-06-15',
                 'location' => 'New York, USA',
                 'gender' => 'male',
@@ -30,10 +29,9 @@ class UserSeeder extends Seeder
 
         $premiumUser->assignRole('user');
 
-        Subscription::firstOrCreate(
+        Subscription::updateOrCreate(
             ['user_id' => $premiumUser->id],
             [
-                
                 'revenuecat_original_app_user_id' => 'original_user_premium_1',
                 'revenuecat_product_id' => 'vip_monthly',
                 'revenuecat_entitlement_id' => 'premium',
@@ -52,7 +50,7 @@ class UserSeeder extends Seeder
             ]
         );
 
-        $freeUser = User::firstOrCreate(
+        $freeUser = User::updateOrCreate(
             ['email' => 'jane@example.com'],
             [
                 'first_name' => 'Jane',
@@ -62,7 +60,6 @@ class UserSeeder extends Seeder
                 'is_premium' => false,
                 'is_active' => true,
                 'onboarding_completed' => false,
-                
                 'date_of_birth' => '1999-02-20',
                 'location' => 'Las Vegas, USA',
                 'gender' => 'female',

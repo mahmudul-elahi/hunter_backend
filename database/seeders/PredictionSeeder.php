@@ -2,19 +2,27 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Prediction;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use RuntimeException;
 
 class PredictionSeeder extends Seeder
 {
     public function run(): void
     {
-        $adminId = 1;
+        $adminId = User::where('email', 'admin@picksempire.com')->firstOrFail()->id;
+        $categoryIds = Category::whereIn('name', ['Sports', 'Casino', 'Stocks', 'Crypto'])->pluck('id', 'name');
+
+        if ($categoryIds->count() !== 4) {
+            throw new RuntimeException('Run CategorySeeder before PredictionSeeder.');
+        }
 
         $predictions = [
             // Sports
             [
-                'category_id' => 1,
+                'category_id' => $categoryIds['Sports'],
                 'title' => 'Man City vs Arsenal',
                 'scheduled_at' => now()->addDays(1)->setTime(15, 0),
                 'confidence_level' => 85,
@@ -26,7 +34,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 1,
+                'category_id' => $categoryIds['Sports'],
                 'title' => 'Real Madrid vs Barcelona',
                 'scheduled_at' => now()->subDays(3)->setTime(20, 0),
                 'confidence_level' => 72,
@@ -38,7 +46,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 1,
+                'category_id' => $categoryIds['Sports'],
                 'title' => 'PSG vs Bayern Munich',
                 'scheduled_at' => now()->subDays(7)->setTime(21, 0),
                 'confidence_level' => 65,
@@ -50,7 +58,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 1,
+                'category_id' => $categoryIds['Sports'],
                 'title' => 'Liverpool vs Chelsea',
                 'scheduled_at' => now()->addDays(3)->setTime(17, 30),
                 'confidence_level' => 78,
@@ -61,10 +69,46 @@ class PredictionSeeder extends Seeder
                 'win_rate' => null,
                 'created_by' => $adminId,
             ],
+            [
+                'category_id' => $categoryIds['Sports'],
+                'title' => 'Celtics vs Heat',
+                'scheduled_at' => now()->addDays(2)->setTime(19, 0),
+                'confidence_level' => 74,
+                'signal' => 'home_win',
+                'reason' => 'Boston have controlled the glass in recent matchups and Miami are short on bench scoring.',
+                'detailed_summary' => 'The Celtics have a clear size advantage and are generating strong half-court looks through their wing creators. Miami can slow the pace, but their second unit has struggled to keep offensive pressure when starters rest.',
+                'status' => 'active',
+                'win_rate' => null,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Sports'],
+                'title' => 'Yankees vs Red Sox',
+                'scheduled_at' => now()->subDays(1)->setTime(18, 45),
+                'confidence_level' => 69,
+                'signal' => 'over',
+                'reason' => 'Both bullpens have been heavily used and wind conditions favor hitters at the park.',
+                'detailed_summary' => 'This rivalry spot projects for traffic on the bases with both lineups producing above-average hard contact. The late innings are the key edge, as both relief groups enter with limited rest.',
+                'status' => 'win',
+                'win_rate' => 69.00,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Sports'],
+                'title' => 'Chiefs vs Bills',
+                'scheduled_at' => now()->subDays(6)->setTime(20, 20),
+                'confidence_level' => 71,
+                'signal' => 'away_win',
+                'reason' => 'Buffalo entered with healthier receivers and a pass rush advantage on third down.',
+                'detailed_summary' => 'The matchup looked favorable for Buffalo if they could force long-yardage situations, but Kansas City adjusted protection early and controlled explosive plays. The original angle had merit but did not survive the game script.',
+                'status' => 'loss',
+                'win_rate' => 71.00,
+                'created_by' => $adminId,
+            ],
 
             // Casino
             [
-                'category_id' => 2,
+                'category_id' => $categoryIds['Casino'],
                 'title' => 'Blackjack — High Stakes Table',
                 'scheduled_at' => now()->addHours(6),
                 'confidence_level' => 68,
@@ -76,7 +120,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 2,
+                'category_id' => $categoryIds['Casino'],
                 'title' => 'Roulette — European Wheel',
                 'scheduled_at' => now()->subDays(2)->setTime(22, 0),
                 'confidence_level' => 60,
@@ -87,10 +131,46 @@ class PredictionSeeder extends Seeder
                 'win_rate' => 60.00,
                 'created_by' => $adminId,
             ],
+            [
+                'category_id' => $categoryIds['Casino'],
+                'title' => 'Baccarat — Banker Run',
+                'scheduled_at' => now()->addHours(9),
+                'confidence_level' => 64,
+                'signal' => 'home_win',
+                'reason' => 'Banker side maintains the lowest house edge and current table flow supports disciplined flat betting.',
+                'detailed_summary' => 'The recommendation is to stay with banker exposure rather than chasing streak extensions. The edge is modest, but the bet profile is more stable than side bets or high-variance progression systems.',
+                'status' => 'active',
+                'win_rate' => null,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Casino'],
+                'title' => 'Slots — Progressive Jackpot Window',
+                'scheduled_at' => now()->subDays(8)->setTime(23, 15),
+                'confidence_level' => 55,
+                'signal' => 'under',
+                'reason' => 'Jackpot value did not clear the estimated break-even threshold for the machine cycle.',
+                'detailed_summary' => 'The jackpot pool looked attractive on headline value, but volatility and contribution rate kept the expected return below the required threshold. Waiting for a larger pool was the cleaner play.',
+                'status' => 'win',
+                'win_rate' => 55.00,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Casino'],
+                'title' => 'Craps — Pass Line Session',
+                'scheduled_at' => now()->addHours(18),
+                'confidence_level' => 62,
+                'signal' => 'over',
+                'reason' => 'Table volatility has compressed and pass line odds offer a cleaner risk profile than prop bets.',
+                'detailed_summary' => 'The setup favors conservative exposure through pass line with odds rather than chasing hardways. The projected edge is not aggressive, but bankroll preservation is stronger in the current session profile.',
+                'status' => 'active',
+                'win_rate' => null,
+                'created_by' => $adminId,
+            ],
 
             // Stocks
             [
-                'category_id' => 3,
+                'category_id' => $categoryIds['Stocks'],
                 'title' => 'AAPL — Apple Inc.',
                 'scheduled_at' => now()->addDays(2)->setTime(9, 30),
                 'confidence_level' => 80,
@@ -102,7 +182,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 3,
+                'category_id' => $categoryIds['Stocks'],
                 'title' => 'TSLA — Tesla Inc.',
                 'scheduled_at' => now()->subDays(5)->setTime(9, 30),
                 'confidence_level' => 70,
@@ -114,7 +194,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 3,
+                'category_id' => $categoryIds['Stocks'],
                 'title' => 'NVDA — NVIDIA Corp.',
                 'scheduled_at' => now()->addDays(5)->setTime(9, 30),
                 'confidence_level' => 88,
@@ -125,10 +205,46 @@ class PredictionSeeder extends Seeder
                 'win_rate' => null,
                 'created_by' => $adminId,
             ],
+            [
+                'category_id' => $categoryIds['Stocks'],
+                'title' => 'MSFT — Microsoft Corp.',
+                'scheduled_at' => now()->addDays(4)->setTime(9, 30),
+                'confidence_level' => 83,
+                'signal' => 'over',
+                'reason' => 'Cloud margin expansion and AI tooling adoption continue to support upward revisions.',
+                'detailed_summary' => 'Microsoft has multiple growth levers between Azure consumption, enterprise AI subscriptions, and resilient software renewal cycles. The technical setup remains constructive while price holds above the recent consolidation base.',
+                'status' => 'active',
+                'win_rate' => null,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Stocks'],
+                'title' => 'AMZN — Amazon.com Inc.',
+                'scheduled_at' => now()->subDays(6)->setTime(9, 30),
+                'confidence_level' => 77,
+                'signal' => 'over',
+                'reason' => 'AWS reacceleration and retail margin discipline gave the stock a favorable earnings setup.',
+                'detailed_summary' => 'Amazon entered earnings with improving cost controls and a healthier advertising segment. The market rewarded stronger operating leverage, confirming the bullish thesis into the report.',
+                'status' => 'win',
+                'win_rate' => 77.00,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Stocks'],
+                'title' => 'META — Meta Platforms Inc.',
+                'scheduled_at' => now()->subDays(9)->setTime(9, 30),
+                'confidence_level' => 66,
+                'signal' => 'under',
+                'reason' => 'Ad growth expectations looked stretched against rising infrastructure spend.',
+                'detailed_summary' => 'The bearish setup focused on valuation compression if management emphasized capex acceleration. Shares held up better than expected as engagement metrics offset spending concerns.',
+                'status' => 'loss',
+                'win_rate' => 66.00,
+                'created_by' => $adminId,
+            ],
 
             // Crypto
             [
-                'category_id' => 4,
+                'category_id' => $categoryIds['Crypto'],
                 'title' => 'BTC/USD — Bitcoin',
                 'scheduled_at' => now()->addHours(12),
                 'confidence_level' => 82,
@@ -140,7 +256,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 4,
+                'category_id' => $categoryIds['Crypto'],
                 'title' => 'ETH/USD — Ethereum',
                 'scheduled_at' => now()->subDays(4)->setTime(14, 0),
                 'confidence_level' => 75,
@@ -152,7 +268,7 @@ class PredictionSeeder extends Seeder
                 'created_by' => $adminId,
             ],
             [
-                'category_id' => 4,
+                'category_id' => $categoryIds['Crypto'],
                 'title' => 'SOL/USD — Solana',
                 'scheduled_at' => now()->subDays(10)->setTime(10, 0),
                 'confidence_level' => 63,
@@ -163,10 +279,49 @@ class PredictionSeeder extends Seeder
                 'win_rate' => 63.00,
                 'created_by' => $adminId,
             ],
+            [
+                'category_id' => $categoryIds['Crypto'],
+                'title' => 'BNB/USD — Binance Coin',
+                'scheduled_at' => now()->addDays(1)->setTime(11, 0),
+                'confidence_level' => 67,
+                'signal' => 'over',
+                'reason' => 'Exchange-volume recovery and token burn expectations are supporting near-term momentum.',
+                'detailed_summary' => 'BNB is benefiting from improving centralized exchange activity and renewed demand around ecosystem launches. A sustained move above local resistance could trigger short-covering toward the next liquidity pocket.',
+                'status' => 'active',
+                'win_rate' => null,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Crypto'],
+                'title' => 'XRP/USD — Ripple',
+                'scheduled_at' => now()->subDays(2)->setTime(13, 30),
+                'confidence_level' => 58,
+                'signal' => 'under',
+                'reason' => 'Momentum faded near resistance and spot demand weakened after the prior breakout attempt.',
+                'detailed_summary' => 'XRP failed to hold its breakout level, with volume drying up into resistance. The safer call was downside consolidation before any renewed attempt at a higher range.',
+                'status' => 'win',
+                'win_rate' => 58.00,
+                'created_by' => $adminId,
+            ],
+            [
+                'category_id' => $categoryIds['Crypto'],
+                'title' => 'DOGE/USD — Dogecoin',
+                'scheduled_at' => now()->addDays(6)->setTime(16, 0),
+                'confidence_level' => 61,
+                'signal' => 'over',
+                'reason' => 'Social momentum is improving and meme-coin flows are rotating back into large-cap names.',
+                'detailed_summary' => 'Dogecoin tends to respond sharply when market risk appetite expands. The setup is speculative, but rising social velocity and improving liquidity make upside continuation plausible.',
+                'status' => 'cancelled',
+                'win_rate' => null,
+                'created_by' => $adminId,
+            ],
         ];
 
         foreach ($predictions as $prediction) {
-            Prediction::create($prediction);
+            Prediction::updateOrCreate(
+                ['title' => $prediction['title']],
+                $prediction,
+            );
         }
     }
 }
