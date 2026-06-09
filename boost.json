@@ -1,7 +1,6 @@
 {
     "agents": [
-        "opencode",
-        "codex"
+        "cursor"
     ],
     "cloud": false,
     "guidelines": true,

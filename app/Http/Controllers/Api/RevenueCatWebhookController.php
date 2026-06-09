@@ -96,7 +96,10 @@ class RevenueCatWebhookController extends Controller
                 'error' => $e->getMessage(),
             ]);
 
-            return response()->json(null);
+            // Return a 5xx so RevenueCat retries the delivery. The event is not
+            // marked processed, and the idempotency guard above prevents
+            // duplicate processing on the retry.
+            return response()->json(null, 500);
         }
     }
 }
