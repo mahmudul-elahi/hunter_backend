@@ -14,19 +14,25 @@ class SocialAuthController extends Controller
 {
     public function googleLogin(Request $request): JsonResponse
     {
-        $request->validate(['access_token' => ['required', 'string']]);
+        $request->validate([
+            'access_token' => ['required', 'string'],
+            'fcm_token' => ['nullable', 'string', 'max:512'],
+        ]);
 
-        return $this->handleSocialLogin('google', $request->access_token);
+        return $this->handleSocialLogin('google', $request->access_token, $request);
     }
 
     public function appleLogin(Request $request): JsonResponse
     {
-        $request->validate(['identity_token' => ['required', 'string']]);
+        $request->validate([
+            'identity_token' => ['required', 'string'],
+            'fcm_token' => ['nullable', 'string', 'max:512'],
+        ]);
 
-        return $this->handleSocialLogin('apple', $request->identity_token);
+        return $this->handleSocialLogin('apple', $request->identity_token, $request);
     }
 
-    private function handleSocialLogin(string $provider, string $token): JsonResponse
+    private function handleSocialLogin(string $provider, string $token, Request $request): JsonResponse
     {
         try {
             $socialUser = Socialite::driver($provider)->stateless()->userFromToken($token);
@@ -65,6 +71,10 @@ class SocialAuthController extends Controller
 
         if (! $user->is_active) {
             return $this->errorResponse('Account is deactivated.', 403);
+        }
+
+        if ($request->filled('fcm_token')) {
+            $user->setActiveDeviceToken($request->input('fcm_token'));
         }
 
         $jwtToken = auth('api')->login($user);

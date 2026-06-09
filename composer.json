@@ -12,6 +12,7 @@
         "php": "^8.3",
         "dedoc/scramble": "^0.13.26",
         "intervention/image": "^4.1",
+        "laravel-notification-channels/fcm": "^6.1",
         "laravel/framework": "^13.8",
         "laravel/socialite": "^5.27",
         "laravel/tinker": "^3.0",

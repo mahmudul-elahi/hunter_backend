@@ -9,6 +9,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 class NewPredictionNotification extends Notification implements ShouldQueue
 {
@@ -21,7 +24,13 @@ class NewPredictionNotification extends Notification implements ShouldQueue
      */
     public function via(User $notifiable): array
     {
-        return ['mail', 'broadcast', 'database'];
+        $channels = ['mail', 'broadcast', 'database'];
+
+        if ($notifiable->routeNotificationForFcm($this) !== []) {
+            $channels[] = FcmChannel::class;
+        }
+
+        return $channels;
     }
 
     public function toMail(User $notifiable): MailMessage
@@ -37,6 +46,34 @@ class NewPredictionNotification extends Notification implements ShouldQueue
     public function toBroadcast(User $notifiable): BroadcastMessage
     {
         return new BroadcastMessage($this->toArray($notifiable));
+    }
+
+    public function toFcm(User $notifiable): FcmMessage
+    {
+        return (new FcmMessage(
+            notification: new FcmNotification(
+                title: 'New Prediction Available',
+                body: $this->prediction->title,
+            ),
+        ))
+            ->data([
+                'type' => 'new_prediction',
+                'prediction_id' => (string) $this->prediction->id,
+            ])
+            ->custom([
+                'android' => [
+                    'notification' => [
+                        'sound' => 'default',
+                    ],
+                ],
+                'apns' => [
+                    'payload' => [
+                        'aps' => [
+                            'sound' => 'default',
+                        ],
+                    ],
+                ],
+            ]);
     }
 
     /**

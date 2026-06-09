@@ -77,6 +77,10 @@ class UserAuthController extends Controller
             ]);
         }
 
+        if ($request->filled('fcm_token')) {
+            $user->setActiveDeviceToken($request->input('fcm_token'));
+        }
+
         return $this->successResponse('Login successful.', [
             'access_token' => $token,
             'token_type' => 'bearer',

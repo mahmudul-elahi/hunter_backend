@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -92,6 +94,37 @@ class User extends Authenticatable implements JWTSubject
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function deviceTokens(): HasMany
+    {
+        return $this->hasMany(UserDeviceToken::class);
+    }
+
+    /**
+     * Replace any existing device tokens with a single active token.
+     */
+    public function setActiveDeviceToken(string $token): UserDeviceToken
+    {
+        return DB::transaction(function () use ($token): UserDeviceToken {
+            UserDeviceToken::where('token', $token)->delete();
+            $this->deviceTokens()->delete();
+
+            return $this->deviceTokens()->create([
+                'token' => $token,
+                'last_used_at' => now(),
+            ]);
+        });
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function routeNotificationForFcm(?Notification $notification = null): array
+    {
+        return $this->deviceTokens()
+            ->pluck('token')
+            ->all();
     }
 
     public function activeSubscription(): HasMany
