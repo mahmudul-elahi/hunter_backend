@@ -131,8 +131,11 @@ test('password reset uses the latest otp and clears all reset otps afterwards', 
 test('forgot password does not issue an otp for an unknown email', function () {
     $this->postJson('/api/auth/forgot-password', ['email' => 'missing@example.com'])
         ->assertUnprocessable()
-        ->assertJsonValidationErrors(['email'])
-        ->assertJsonPath('errors.email.0', 'Email does not exist.');
+        ->assertJson([
+            'status' => false,
+            'message' => 'Email does not exist.',
+            'data' => null,
+        ]);
 
     expect(latestOtpFor('missing@example.com', 'password_reset'))->toBeNull();
     Notification::assertNothingSent();
