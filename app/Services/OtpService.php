@@ -10,7 +10,10 @@ class OtpService
 {
     public function send(string $email, string $type): OtpCode
     {
-        OtpCode::where('email', $email)->where('type', $type)->whereNull('used_at')->delete();
+        OtpCode::where('email', $email)
+            ->where('type', $type)
+            ->where('expires_at', '<=', now())
+            ->delete();
 
         $otp = OtpCode::create([
             'email' => $email,
@@ -24,31 +27,38 @@ class OtpService
         return $otp;
     }
 
+    /**
+     * Only the most recently issued OTP is accepted.
+     */
     public function check(string $email, string $code, string $type): bool
     {
-        return OtpCode::where('email', $email)
-            ->where('code', $code)
-            ->where('type', $type)
-            ->whereNull('used_at')
-            ->where('expires_at', '>', now())
-            ->exists();
+        $latest = $this->latestActive($email, $type);
+
+        return $latest !== null && hash_equals($latest->code, $code);
     }
 
+    /**
+     * Verify against the latest OTP and, on success, delete every
+     * OTP of this type for the email so none can be reused.
+     */
     public function verify(string $email, string $code, string $type): bool
     {
-        $otp = OtpCode::where('email', $email)
-            ->where('code', $code)
-            ->where('type', $type)
-            ->whereNull('used_at')
-            ->where('expires_at', '>', now())
-            ->first();
-
-        if (! $otp) {
+        if (! $this->check($email, $code, $type)) {
             return false;
         }
 
-        $otp->update(['used_at' => now()]);
+        OtpCode::where('email', $email)->where('type', $type)->delete();
 
         return true;
+    }
+
+    private function latestActive(string $email, string $type): ?OtpCode
+    {
+        return OtpCode::where('email', $email)
+            ->where('type', $type)
+            ->whereNull('used_at')
+            ->where('expires_at', '>', now())
+            ->latest('id')
+            ->first();
     }
 }
