@@ -128,6 +128,16 @@ test('password reset uses the latest otp and clears all reset otps afterwards', 
     expect(OtpCode::where('email', 'jane@example.com')->where('type', 'password_reset')->count())->toBe(0);
 });
 
+test('forgot password does not issue an otp for an unknown email', function () {
+    $this->postJson('/api/auth/forgot-password', ['email' => 'missing@example.com'])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['email'])
+        ->assertJsonPath('errors.email.0', 'Email does not exist.');
+
+    expect(latestOtpFor('missing@example.com', 'password_reset'))->toBeNull();
+    Notification::assertNothingSent();
+});
+
 test('verification otps do not interfere with password reset otps', function () {
     registerJane();
 
