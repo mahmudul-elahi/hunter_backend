@@ -23,6 +23,7 @@ class UpdateProfileRequest extends FormRequest
             'date_of_birth' => ['sometimes', 'nullable', 'date', 'before:today'],
             'location' => ['sometimes', 'nullable', 'string', 'max:255'],
             'gender' => ['sometimes', 'nullable', 'in:male,female,other'],
+            'avatar' => ['sometimes', 'nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

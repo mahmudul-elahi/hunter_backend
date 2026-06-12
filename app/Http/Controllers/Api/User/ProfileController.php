@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ChangePasswordRequest;
-use App\Http\Requests\Profile\UpdateAvatarRequest;
 use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -21,9 +20,20 @@ class ProfileController extends Controller
 
     public function update(UpdateProfileRequest $request): JsonResponse
     {
-        Auth::user()->update($request->validated());
+        $user = Auth::user();
+        $data = $request->safe()->except('avatar');
 
-        return $this->successResponse('Profile updated.', new UserResource(Auth::user()->fresh()));
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        $user->update($data);
+
+        return $this->successResponse('Profile updated.', new UserResource($user->fresh()));
     }
 
     public function changePassword(ChangePasswordRequest $request): JsonResponse
@@ -37,21 +47,6 @@ class ProfileController extends Controller
         $user->update(['password' => $request->password]);
 
         return $this->successResponse('Password changed successfully.');
-    }
-
-    public function updateAvatar(UpdateAvatarRequest $request): JsonResponse
-    {
-        $user = Auth::user();
-
-        if ($user->avatar) {
-            Storage::disk('public')->delete($user->avatar);
-        }
-
-        $path = $request->file('avatar')->store('avatars', 'public');
-
-        $user->update(['avatar' => $path]);
-
-        return $this->successResponse('Avatar updated.', ['avatar' => url(Storage::url($path))]);
     }
 
     public function deleteAvatar(): JsonResponse

@@ -41,9 +41,8 @@ Route::middleware(['auth:api', 'role:user'])->group(function () {
     Route::post('user/onboarding/categories', [OnboardingController::class, 'saveCategories']);
 
     Route::get('user/profile', [ProfileController::class, 'show']);
-    Route::put('user/profile', [ProfileController::class, 'update']);
+    Route::post('user/profile', [ProfileController::class, 'update']);
     Route::put('user/change-password', [ProfileController::class, 'changePassword']);
-    Route::post('user/profile/avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('user/profile/avatar', [ProfileController::class, 'deleteAvatar']);
 
     Route::get('predictions/category/{categoryId}', [UserPredictionController::class, 'index']);
