@@ -32,6 +32,6 @@ class SubscriptionCancelledNotification extends Notification implements ShouldQu
      */
     public function toArray(User $notifiable): array
     {
-        return ['message' => 'Your subscription has been cancelled.'];
+        return ['title' => 'Subscription Cancelled', 'message' => 'Your subscription has been cancelled.'];
     }
 }

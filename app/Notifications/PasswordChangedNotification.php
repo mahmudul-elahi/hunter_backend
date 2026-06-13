@@ -32,6 +32,9 @@ class PasswordChangedNotification extends Notification implements ShouldQueue
      */
     public function toArray(User $notifiable): array
     {
-        return ['message' => 'Your account password was recently changed. If this wasn\'t you, please contact support immediately.'];
+        return [
+            'title' => 'Password Changed',
+            'message' => 'Your account password was recently changed. If this wasn\'t you, please contact support immediately.'
+        ];
     }
 }

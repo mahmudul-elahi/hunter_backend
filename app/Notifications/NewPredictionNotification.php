@@ -36,7 +36,7 @@ class NewPredictionNotification extends Notification implements ShouldQueue
     public function toMail(User $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New Prediction Available: '.$this->prediction->title)
+            ->subject('New Prediction Available: ' . $this->prediction->title)
             ->view('emails.new-prediction', [
                 'user' => $notifiable,
                 'prediction' => $this->prediction,
@@ -82,7 +82,8 @@ class NewPredictionNotification extends Notification implements ShouldQueue
     public function toArray(User $notifiable): array
     {
         return [
-            'message' => 'New prediction available: '.$this->prediction->title,
+            'title' => 'New Prediction Available',
+            'message' => 'New prediction available: ' . $this->prediction->title,
             'prediction_id' => $this->prediction->id,
         ];
     }

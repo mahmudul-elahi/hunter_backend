@@ -32,6 +32,6 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
      */
     public function toArray(User $notifiable): array
     {
-        return ['message' => 'Your payment was successful.'];
+        return ['title' => 'Payment Successful', 'message' => 'Your payment was successful.'];
     }
 }

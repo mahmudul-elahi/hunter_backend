@@ -45,7 +45,8 @@ class SubscriptionRenewalReminderNotification extends Notification implements Sh
     public function toArray(User $notifiable): array
     {
         return [
-            'message' => 'Your subscription will renew on '.$this->renewalDate->format('M j, Y').'. Make sure your payment method is up to date.',
+            'title' => 'Subscription Renewal Reminder',
+            'message' => 'Your subscription will renew on ' . $this->renewalDate->format('M j, Y') . '. Make sure your payment method is up to date.',
         ];
     }
 }
