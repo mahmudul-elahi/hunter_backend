@@ -26,7 +26,7 @@
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:28px;">
         <tr>
             <td style="background-color:#f8f9fa;border-radius:4px;padding:16px 20px;">
-                <p style="margin:0;font-size:15px;color:#444444;line-height:1.8;white-space:pre-line;">{{ $message }}</p>
+                <p style="margin:0;font-size:15px;color:#444444;line-height:1.8;white-space:pre-line;">{{ $supportMessage }}</p>
             </td>
         </tr>
     </table>
