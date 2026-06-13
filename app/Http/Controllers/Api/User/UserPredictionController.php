@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
-use App\Http\Resources\PredictionResource;
+use App\Http\Resources\UserPredictionResource;
 use App\Models\Category;
 use App\Models\Prediction;
 use Illuminate\Http\JsonResponse;
@@ -24,11 +24,11 @@ class UserPredictionController extends Controller
             ->whereHas('category')
             ->where('status', 'active')
             ->where('category_id', $categoryId)
-            ->when($request->query('title'), fn ($q, $title) => $q->where('title', 'like', "%{$title}%"))
+            ->when($request->query('title'), fn($q, $title) => $q->where('title', 'like', "%{$title}%"))
             ->latest()
             ->paginate($perPage);
 
-        return $this->paginatedResponse('Predictions retrieved.', PredictionResource::collection($paginator), $paginator);
+        return $this->paginatedResponse('Predictions retrieved.', UserPredictionResource::collection($paginator), $paginator);
     }
 
     public function show(int $id): JsonResponse
@@ -39,7 +39,7 @@ class UserPredictionController extends Controller
 
         $prediction = Prediction::with(['category'])->whereHas('category')->findOrFail($id);
 
-        return $this->successResponse('Prediction retrieved.', new PredictionResource($prediction));
+        return $this->successResponse('Prediction retrieved.', new UserPredictionResource($prediction));
     }
 
     private function premiumRequired(): JsonResponse
@@ -56,7 +56,7 @@ class UserPredictionController extends Controller
     public function categories(): JsonResponse
     {
         $categories = Category::withCount([
-            'predictions as active_predictions_count' => fn ($query) => $query->where('status', 'active'),
+            'predictions as active_predictions_count' => fn($query) => $query->where('status', 'active'),
         ])
             ->where('is_active', true)
             ->get();
