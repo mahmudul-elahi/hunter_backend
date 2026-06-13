@@ -35,7 +35,7 @@ class PaymentSucceededNotification extends Notification implements ShouldQueue
         return [
             'icon' => asset('assets/images/notifications/subscriptions.svg'),
             'title' => 'Payment Successful',
-            'message' => 'Your payment was successful.'
+            'message' => 'Your payment was successful.',
         ];
     }
 }

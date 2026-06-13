@@ -41,7 +41,7 @@ class PaymentFailedNotification extends Notification implements ShouldQueue
         return [
             'icon' => asset('assets/images/notifications/subscriptions.svg'),
             'title' => 'Payment Failed',
-            'message' => 'Your payment failed. Please update your payment method.'
+            'message' => 'Your payment failed. Please update your payment method.',
         ];
     }
 }
