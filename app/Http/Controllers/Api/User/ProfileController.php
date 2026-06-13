@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
+    public function __construct(private readonly NotificationService $notificationService) {}
+
     public function show(): JsonResponse
     {
         return $this->successResponse('Profile retrieved.', new UserResource(Auth::user()));
@@ -45,6 +48,8 @@ class ProfileController extends Controller
         }
 
         $user->update(['password' => $request->password]);
+
+        $this->notificationService->sendPasswordChanged($user);
 
         return $this->successResponse('Password changed successfully.');
     }
