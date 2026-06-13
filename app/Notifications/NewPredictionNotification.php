@@ -83,7 +83,7 @@ class NewPredictionNotification extends Notification implements ShouldQueue
     public function toArray(User $notifiable): array
     {
         return [
-            'icon' => Storage::disk('public')->url($this->prediction->category->icon),
+            'icon' => 'asfsd',
             'title' => 'New Prediction Available',
             'message' => 'New prediction available: ' . $this->prediction->title,
             'prediction_id' => $this->prediction->id,
