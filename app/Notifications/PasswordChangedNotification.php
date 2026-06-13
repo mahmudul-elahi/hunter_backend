@@ -33,8 +33,9 @@ class PasswordChangedNotification extends Notification implements ShouldQueue
     public function toArray(User $notifiable): array
     {
         return [
+            'icon' => asset('assets/images/notifications/welcome.svg'),
             'title' => 'Password Changed',
-            'message' => 'Your account password was recently changed. If this wasn\'t you, please contact support immediately.'
+            'message' => 'Your account password was recently changed. If this wasn\'t you, please contact support immediately.',
         ];
     }
 }

@@ -32,7 +32,7 @@ class NotificationService
     public function sendNewPrediction(Prediction $prediction): void
     {
         User::where('is_premium', true)->lazy()->each(
-            fn(User $user) => $user->notify(new NewPredictionNotification($prediction))
+            fn (User $user) => $user->notify(new NewPredictionNotification($prediction))
         );
     }
 
@@ -92,6 +92,6 @@ class NotificationService
 
     private function notifyAdmins(mixed $notification): void
     {
-        User::role('admin')->each(fn(User $admin) => $admin->notify($notification));
+        User::role('admin')->each(fn (User $admin) => $admin->notify($notification));
     }
 }

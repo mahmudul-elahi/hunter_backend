@@ -32,6 +32,10 @@ class WelcomeNotification extends Notification implements ShouldQueue
      */
     public function toArray(User $notifiable): array
     {
-        return ['title' => 'Welcome!', 'message' => 'Welcome to Picks Empire! Your account is ready to use.'];
+        return [
+            'icon' => asset('assets/images/notifications/welcome.svg'),
+            'title' => 'Welcome!',
+            'message' => 'Welcome to Picks Empire! Your account is ready to use.',
+        ];
     }
 }

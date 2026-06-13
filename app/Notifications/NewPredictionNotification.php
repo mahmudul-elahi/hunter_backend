@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
+use Illuminate\Support\Facades\Storage;
 
 class NewPredictionNotification extends Notification implements ShouldQueue
 {
@@ -82,6 +83,7 @@ class NewPredictionNotification extends Notification implements ShouldQueue
     public function toArray(User $notifiable): array
     {
         return [
+            'icon' => Storage::disk('public')->url($this->prediction->category->icon),
             'title' => 'New Prediction Available',
             'message' => 'New prediction available: ' . $this->prediction->title,
             'prediction_id' => $this->prediction->id,

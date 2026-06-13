@@ -38,6 +38,10 @@ class PaymentFailedNotification extends Notification implements ShouldQueue
      */
     public function toArray(User $notifiable): array
     {
-        return ['title' => 'Payment Failed', 'message' => 'Your payment failed. Please update your payment method.'];
+        return [
+            'icon' => asset('assets/images/notifications/subscriptions.svg'),
+            'title' => 'Payment Failed',
+            'message' => 'Your payment failed. Please update your payment method.'
+        ];
     }
 }

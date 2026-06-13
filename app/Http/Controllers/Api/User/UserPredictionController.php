@@ -24,7 +24,7 @@ class UserPredictionController extends Controller
             ->whereHas('category')
             ->where('status', 'active')
             ->where('category_id', $categoryId)
-            ->when($request->query('title'), fn($q, $title) => $q->where('title', 'like', "%{$title}%"))
+            ->when($request->query('title'), fn ($q, $title) => $q->where('title', 'like', "%{$title}%"))
             ->latest()
             ->paginate($perPage);
 
@@ -48,13 +48,13 @@ class UserPredictionController extends Controller
             'premium_required' => true,
         ];
 
-        return $this->errorResponse('This feature is available for premium subscribers only.', 403, $errors,);
+        return $this->errorResponse('This feature is available for premium subscribers only.', 403, $errors);
     }
 
     public function categories(): JsonResponse
     {
         $categories = Category::withCount([
-            'predictions as active_predictions_count' => fn($query) => $query->where('status', 'active'),
+            'predictions as active_predictions_count' => fn ($query) => $query->where('status', 'active'),
         ])
             ->where('is_active', true)
             ->get();

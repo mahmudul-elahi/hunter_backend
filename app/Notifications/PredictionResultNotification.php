@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class PredictionResultNotification extends Notification implements ShouldQueue
 {
@@ -45,6 +46,7 @@ class PredictionResultNotification extends Notification implements ShouldQueue
     public function toArray(User $notifiable): array
     {
         return [
+            'icon' => Storage::disk('public')->url($this->prediction->category->icon),
             'title' => 'Prediction Result',
             'message' => 'Prediction result for ' . $this->prediction->title . ': ' . strtoupper($this->prediction->status),
             'prediction_id' => $this->prediction->id,
