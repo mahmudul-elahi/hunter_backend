@@ -44,13 +44,11 @@ class UserPredictionController extends Controller
 
     private function premiumRequired(): JsonResponse
     {
-        return response()->json([
-            'status' => false,
-            'message' => 'This feature is available for premium subscribers only.',
-            'data' => [
-                'premium_required' => true,
-            ],
-        ], 403);
+        $errors = [
+            'premium_required' => true,
+        ];
+
+        return $this->errorResponse('This feature is available for premium subscribers only.', 403, $errors,);
     }
 
     public function categories(): JsonResponse
