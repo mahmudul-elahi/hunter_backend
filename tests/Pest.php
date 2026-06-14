@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Category;
+use App\Models\Prediction;
+use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -47,4 +51,93 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * Ensure the api-guarded roles exist before assigning them in tests.
+ */
+function seedRoles(): void
+{
+    test()->seed(RoleSeeder::class);
+}
+
+/**
+ * Create a user with the given role without authenticating as them.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function makeUserWithRole(string $role = 'user', array $attributes = []): User
+{
+    $user = User::factory()->create($attributes);
+    $user->assignRole($role);
+
+    return $user;
+}
+
+/**
+ * Create a user with the "user" role and authenticate as them on the api guard.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function actingAsUser(array $attributes = []): User
+{
+    $user = makeUserWithRole('user', $attributes);
+
+    test()->actingAs($user, 'api');
+
+    return $user;
+}
+
+/**
+ * Create a user with the "admin" role and authenticate as them on the api guard.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function actingAsAdmin(array $attributes = []): User
+{
+    $admin = makeUserWithRole('admin', $attributes);
+
+    test()->actingAs($admin, 'api');
+
+    return $admin;
+}
+
+/**
+ * Create a category with sensible defaults.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function makeCategory(array $attributes = []): Category
+{
+    return Category::create(array_merge([
+        'name' => 'Sports',
+        'icon' => 'categories/icons/sports.svg',
+        'image' => 'categories/sports.png',
+        'description' => 'Sports predictions',
+        'is_active' => true,
+    ], $attributes));
+}
+
+/**
+ * Create a prediction with sensible defaults, creating a category when none is given.
+ *
+ * @param  array<string, mixed>  $attributes
+ */
+function makePrediction(array $attributes = []): Prediction
+{
+    $categoryId = $attributes['category_id'] ?? makeCategory()->id;
+    $createdBy = $attributes['created_by'] ?? User::factory()->create()->id;
+
+    return Prediction::create(array_merge([
+        'title' => 'Lakers moneyline',
+        'scheduled_at' => now()->addDay(),
+        'confidence_level' => 80,
+        'signal' => 'strong',
+        'reason' => 'Momentum and matchup advantage.',
+        'detailed_summary' => 'Premium prediction summary.',
+        'status' => 'active',
+    ], $attributes, [
+        'category_id' => $categoryId,
+        'created_by' => $createdBy,
+    ]));
 }
