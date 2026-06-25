@@ -39,8 +39,10 @@ class UserResource extends JsonResource
 
         return [
             'type' => $subscription?->status ?? 'none',
-            'product_id' => $subscription?->revenuecat_product_id,
+            'product_id' => $subscription?->revenuecat_entitlement_id,
             'store' => $subscription?->store,
+            'price' => $subscription?->price,
+            'purchased_at' => $subscription?->purchased_at?->toIso8601String(),
             'expires_at' => $subscription?->expires_at?->toIso8601String(),
         ];
     }
