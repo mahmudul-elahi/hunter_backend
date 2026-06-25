@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Notifications\PaymentSucceededNotification;
+use App\Notifications\SubscriptionCancelledNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -69,6 +70,52 @@ test('an initial purchase webhook syncs the subscription and grants premium', fu
     expect(DB::table('revenuecat_webhook_events')->where('event_id', 'evt_purchase_1')->value('processed_at'))->not->toBeNull();
 
     Notification::assertSentTo($user, PaymentSucceededNotification::class);
+});
+
+test('an expiration webhook revokes premium and marks the subscription expired', function () {
+    Notification::fake();
+
+    $user = User::factory()->create(['is_premium' => true]);
+
+    $startsAtMs = now()->subMonth()->timestamp * 1000;
+    $endedAtMs = now()->subMinute()->timestamp * 1000;
+
+    // After expiry the V2 API reports the subscription as expired with no access
+    // and no active entitlements.
+    Http::fake([
+        "*/customers/{$user->id}/subscriptions" => Http::response(['items' => [[
+            'product_id' => 'premium_monthly',
+            'store' => 'APP_STORE',
+            'environment' => 'PRODUCTION',
+            'gives_access' => false,
+            'status' => 'expired',
+            'starts_at' => $startsAtMs,
+            'current_period_ends_at' => $endedAtMs,
+        ]]]),
+        "*/customers/{$user->id}/active-entitlements" => Http::response(['items' => []]),
+        "*/customers/{$user->id}" => Http::response(['id' => 'rc_cust_123']),
+    ]);
+
+    $this->postJson('/api/webhook/revenuecat', ['event' => [
+        'id' => 'evt_expire_1',
+        'type' => 'EXPIRATION',
+        'app_user_id' => (string) $user->id,
+        'product_id' => 'premium_monthly',
+        'environment' => 'PRODUCTION',
+    ]], ['Authorization' => 'secret-token'])
+        ->assertOk();
+
+    expect($user->fresh()->is_premium)->toBeFalse();
+
+    $this->assertDatabaseHas('subscriptions', [
+        'user_id' => $user->id,
+        'status' => 'expired',
+        'revenuecat_product_id' => 'premium_monthly',
+    ]);
+
+    expect(DB::table('revenuecat_webhook_events')->where('event_id', 'evt_expire_1')->value('processed_at'))->not->toBeNull();
+
+    Notification::assertSentTo($user, SubscriptionCancelledNotification::class);
 });
 
 test('a misconfigured project id makes the customer lookup fail and the event is left unprocessed', function () {

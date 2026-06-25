@@ -132,6 +132,30 @@ class User extends Authenticatable implements JWTSubject
         return $this->subscriptions()->whereIn('status', ['active']);
     }
 
+    /**
+     * Whether the user currently has premium access.
+     *
+     * Checks the persisted subscription's expiry in addition to the
+     * is_premium flag, so access is revoked the moment the period ends
+     * without waiting for the RevenueCat EXPIRATION webhook to arrive.
+     */
+    public function hasActivePremium(): bool
+    {
+        if (! $this->is_premium) {
+            return false;
+        }
+
+        $subscription = $this->subscriptions()->latest('expires_at')->first();
+
+        // Flagged premium without a subscription record (e.g. manually
+        // comped) — honor the flag.
+        if (! $subscription) {
+            return true;
+        }
+
+        return $subscription->expires_at === null || $subscription->expires_at->isFuture();
+    }
+
     public function revenueCatAppUserId(): string
     {
         return $this->revenuecat_app_user_id ?: (string) $this->id;

@@ -50,6 +50,34 @@ test('a premium user lists only active predictions for a category', function () 
         ->assertJsonPath('data.0.title', 'Active pick');
 });
 
+test('a premium user whose subscription has expired is denied without waiting for the webhook', function () {
+    $user = actingAsUser(['is_premium' => true]);
+    $user->subscriptions()->create([
+        'status' => 'active',
+        'expires_at' => now()->subMinute(),
+    ]);
+    $category = makeCategory();
+
+    $this->getJson("/api/predictions/category/{$category->id}")
+        ->assertStatus(403)
+        ->assertJsonPath('errors.premium_required', true);
+});
+
+test('a premium user with a subscription expiring in the future keeps access', function () {
+    $user = actingAsUser(['is_premium' => true]);
+    $user->subscriptions()->create([
+        'status' => 'active',
+        'expires_at' => now()->addMonth(),
+    ]);
+    $category = makeCategory();
+
+    makePrediction(['category_id' => $category->id, 'status' => 'active', 'title' => 'Active pick']);
+
+    $this->getJson("/api/predictions/category/{$category->id}")
+        ->assertOk()
+        ->assertJsonCount(1, 'data');
+});
+
 test('premium category predictions can be filtered by title', function () {
     actingAsUser(['is_premium' => true]);
     $category = makeCategory();

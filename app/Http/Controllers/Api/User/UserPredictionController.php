@@ -14,7 +14,7 @@ class UserPredictionController extends Controller
 {
     public function index(Request $request, int $categoryId): JsonResponse
     {
-        if (! auth()->user()->is_premium) {
+        if (! auth()->user()->hasActivePremium()) {
             return $this->premiumRequired();
         }
 
@@ -33,7 +33,7 @@ class UserPredictionController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        if (! auth()->user()->is_premium) {
+        if (! auth()->user()->hasActivePremium()) {
             return $this->premiumRequired();
         }
 
