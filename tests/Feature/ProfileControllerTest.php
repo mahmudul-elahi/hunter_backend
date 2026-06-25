@@ -30,6 +30,32 @@ test('the user profile endpoint returns the authenticated user', function () {
         ->assertJsonPath('data.id', $user->id);
 });
 
+test('the profile reports active premium for a subscription that has not expired', function () {
+    $user = actingAsUser(['is_premium' => true]);
+    $user->subscriptions()->create([
+        'status' => 'active',
+        'expires_at' => now()->addMonth(),
+    ]);
+
+    $this->getJson('/api/me')
+        ->assertOk()
+        ->assertJsonPath('data.is_premium', true)
+        ->assertJsonPath('data.subscription.type', 'active');
+});
+
+test('the profile revokes premium and marks the subscription expired once the period ends', function () {
+    $user = actingAsUser(['is_premium' => true]);
+    $user->subscriptions()->create([
+        'status' => 'active',
+        'expires_at' => now()->subMinute(),
+    ]);
+
+    $this->getJson('/api/me')
+        ->assertOk()
+        ->assertJsonPath('data.is_premium', false)
+        ->assertJsonPath('data.subscription.type', 'expired');
+});
+
 test('a user can update simple profile fields', function () {
     actingAsUser(['first_name' => 'Old']);
 
